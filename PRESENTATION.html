@@ -1,59 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediReach - Project Presentation</title>
+    <title>MediReach — Project Presentation</title>
     <style>
         @page {
             margin: 2cm;
             size: A4;
         }
-        
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            line-height: 1.7;
+            color: #1f2937;
             max-width: 210mm;
             margin: 0 auto;
             padding: 20px;
             background: white;
         }
-        
+
         h1 {
-            color: #2563eb;
-            border-bottom: 3px solid #2563eb;
-            padding-bottom: 10px;
+            color: #1d4ed8;
+            border-bottom: 3px solid #1d4ed8;
+            padding-bottom: 8px;
             margin-top: 30px;
             page-break-after: avoid;
         }
-        
+
         h2 {
             color: #1e40af;
             margin-top: 25px;
             page-break-after: avoid;
         }
-        
+
         h3 {
-            color: #3b82f6;
-            margin-top: 20px;
+            color: #2563eb;
+            margin-top: 18px;
             page-break-after: avoid;
         }
-        
-        h4 {
-            color: #60a5fa;
-            margin-top: 15px;
-        }
-        
+
         pre {
             background: #f3f4f6;
-            padding: 15px;
-            border-radius: 5px;
+            padding: 14px;
+            border-radius: 6px;
             overflow-x: auto;
             border-left: 4px solid #2563eb;
             page-break-inside: avoid;
+            font-size: 0.88em;
         }
-        
+
         code {
             background: #e5e7eb;
             padding: 2px 6px;
@@ -61,132 +62,512 @@
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 18px 0;
             page-break-inside: avoid;
         }
-        
-        th, td {
+
+        th,
+        td {
             border: 1px solid #d1d5db;
-            padding: 12px;
+            padding: 11px 14px;
             text-align: left;
         }
-        
+
         th {
-            background: #2563eb;
+            background: #1d4ed8;
             color: white;
-            font-weight: bold;
+            font-weight: 600;
         }
-        
+
         tr:nth-child(even) {
             background: #f9fafb;
         }
-        
-        ul, ol {
+
+        ul,
+        ol {
             margin: 10px 0;
-            padding-left: 30px;
+            padding-left: 28px;
         }
-        
+
         li {
-            margin: 5px 0;
+            margin: 6px 0;
         }
-        
-        .cover-page {
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .cover {
             text-align: center;
-            padding: 100px 0;
+            padding: 80px 0 60px;
             page-break-after: always;
         }
-        
-        .cover-page h1 {
-            font-size: 3em;
+
+        .cover h1 {
+            font-size: 3.2em;
             border: none;
-            margin-bottom: 20px;
+            color: #1d4ed8;
+            margin-bottom: 12px;
         }
-        
-        .cover-page p {
-            font-size: 1.2em;
+
+        .cover .subtitle {
+            font-size: 1.25em;
             color: #6b7280;
+            margin-bottom: 40px;
         }
-        
+
+        .cover .links {
+            margin-top: 30px;
+        }
+
+        .cover .links a {
+            display: inline-block;
+            margin: 8px;
+            padding: 10px 22px;
+            background: #1d4ed8;
+            color: white;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .cover .links a:hover {
+            background: #1e40af;
+            text-decoration: none;
+        }
+
+        .cover .meta {
+            margin-top: 60px;
+            color: #9ca3af;
+            font-size: 0.9em;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            font-size: 0.78em;
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        .badge-green {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-red {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-purple {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .highlight-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 18px 0;
+        }
+
         .section {
             page-break-before: always;
         }
-        
-        @media print {
-            body {
-                background: white;
-            }
-            
-            .no-print {
-                display: none;
-            }
-        }
-        
+
         .print-button {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 12px 24px;
-            background: #2563eb;
+            padding: 11px 22px;
+            background: #1d4ed8;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-size: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             z-index: 1000;
         }
-        
+
         .print-button:hover {
             background: #1e40af;
         }
+
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
     </style>
 </head>
+
 <body>
     <button class="print-button no-print" onclick="window.print()">📄 Save as PDF</button>
-    
-    <div class="cover-page">
-        <h1>MediReach</h1>
-        <p>Unified City Health Resource Finder</p>
-        <p style="margin-top: 50px; font-size: 1em;">Comprehensive Project Documentation</p>
-        <p style="margin-top: 100px; color: #9ca3af;">2024-2025</p>
+
+    <!-- Cover Page -->
+    <div class="cover">
+        <h1>🏥 MediReach</h1>
+        <p class="subtitle">Unified City Health Resource Finder<br>
+            <strong>Full-Stack Emergency Healthcare Platform — Delhi</strong>
+        </p>
+        <div class="links">
+            <a href="https://medireach-tawny.vercel.app" target="_blank">🌐 Live Demo</a>
+            <a href="https://medireach-idb2.onrender.com/api/health" target="_blank">⚙️ Backend API</a>
+            <a href="https://github.com/nitinbalajii/medireach" target="_blank">📦 GitHub Repo</a>
+        </div>
+        <div class="meta">
+            <p>Built with Next.js 16 · Express · MongoDB · Socket.io · MapLibre GL</p>
+            <p>Deployed on Vercel (Frontend) + Render (Backend) + MongoDB Atlas</p>
+            <p style="margin-top: 30px;">2025–2026</p>
+        </div>
     </div>
 
-    <!-- Content will be inserted here -->
-    <script>
-        // Fetch and parse the markdown file
-        fetch('PROJECT_PRESENTATION.md')
-            .then(response => response.text())
-            .then(markdown => {
-                // Simple markdown to HTML conversion
-                let html = markdown
-                    // Headers
-                    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-                    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-                    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-                    // Bold
-                    .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
-                    // Italic
-                    .replace(/\*(.*?)\*/gim, '<em>$1</em>')
-                    // Code blocks
-                    .replace(/```(.*?)\n([\s\S]*?)```/gim, '<pre><code>$2</code></pre>')
-                    // Inline code
-                    .replace(/`([^`]+)`/gim, '<code>$1</code>')
-                    // Links
-                    .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2">$1</a>')
-                    // Line breaks
-                    .replace(/\n\n/gim, '</p><p>')
-                    // Lists
-                    .replace(/^\- (.*$)/gim, '<li>$1</li>')
-                    .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
-                    // Horizontal rules
-                    .replace(/^---$/gim, '<hr>');
-                
-                document.body.innerHTML += '<div>' + html + '</div>';
-            });
-    </script>
+    <!-- Section 1: Overview -->
+    <div class="section">
+        <h1>1. Project Overview</h1>
+        <p>
+            <strong>MediReach</strong> is a real-time, full-stack web application designed to solve the critical gap
+            in emergency healthcare access for Delhi citizens. The platform aggregates hospitals, ambulances,
+            blood donors, and pharmacies into a single unified dashboard — accessible in seconds during emergencies.
+        </p>
+
+        <div class="highlight-box">
+            <strong>Problem Statement:</strong> During medical emergencies, people waste critical time searching for
+            available hospitals, blood donors, and ambulances across disconnected systems. MediReach consolidates
+            all these into one real-time platform.
+        </div>
+
+        <h2>Key Features</h2>
+        <table>
+            <tr>
+                <th>Feature</th>
+                <th>Description</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>🆘 SOS Emergency Dispatch</td>
+                <td>One-tap dispatch — auto-assigns nearest ambulance &amp; hospital using geo-query</td>
+                <td><span class="badge badge-green">✅ Live</span></td>
+            </tr>
+            <tr>
+                <td>🏥 Hospital Finder</td>
+                <td>Real-time availability with interactive MapLibre maps</td>
+                <td><span class="badge badge-green">✅ Live</span></td>
+            </tr>
+            <tr>
+                <td>🚑 Ambulance Tracking</td>
+                <td>Live GPS tracking via Socket.io WebSockets</td>
+                <td><span class="badge badge-green">✅ Live</span></td>
+            </tr>
+            <tr>
+                <td>🩸 Blood Donor Network</td>
+                <td>10 verified Delhi donors, filter by blood type &amp; area</td>
+                <td><span class="badge badge-green">✅ Live</span></td>
+            </tr>
+            <tr>
+                <td>💊 Medicine Finder</td>
+                <td>Search 5 Delhi pharmacies with live stock &amp; pricing</td>
+                <td><span class="badge badge-green">✅ Live</span></td>
+            </tr>
+            <tr>
+                <td>👨‍⚕️ Doctor Directory</td>
+                <td>Filter by specialty, teleconsult, on-duty status</td>
+                <td><span class="badge badge-green">✅ Live</span></td>
+            </tr>
+            <tr>
+                <td>🔐 JWT Authentication</td>
+                <td>Secure register/login with token-based sessions</td>
+                <td><span class="badge badge-green">✅ Live</span></td>
+            </tr>
+            <tr>
+                <td>📋 Patient QR Profile</td>
+                <td>Scannable medical ID with blood group, allergies, conditions</td>
+                <td><span class="badge badge-green">✅ Live</span></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Section 2: Tech Stack -->
+    <div class="section">
+        <h1>2. Technology Stack</h1>
+
+        <h2>Frontend</h2>
+        <table>
+            <tr>
+                <th>Technology</th>
+                <th>Purpose</th>
+                <th>Version</th>
+            </tr>
+            <tr>
+                <td>Next.js</td>
+                <td>React framework with App Router &amp; SSR</td>
+                <td>16.1.6</td>
+            </tr>
+            <tr>
+                <td>TypeScript</td>
+                <td>Type-safe development</td>
+                <td>5.x</td>
+            </tr>
+            <tr>
+                <td>Tailwind CSS</td>
+                <td>Utility-first styling</td>
+                <td>v4</td>
+            </tr>
+            <tr>
+                <td>shadcn/ui + Radix UI</td>
+                <td>Accessible component primitives</td>
+                <td>Latest</td>
+            </tr>
+            <tr>
+                <td>MapLibre GL JS</td>
+                <td>Open-source interactive maps (no paid API key)</td>
+                <td>5.10</td>
+            </tr>
+            <tr>
+                <td>Socket.io Client</td>
+                <td>Real-time ambulance location updates</td>
+                <td>4.8</td>
+            </tr>
+            <tr>
+                <td>React Hook Form + Zod</td>
+                <td>Form validation</td>
+                <td>Latest</td>
+            </tr>
+        </table>
+
+        <h2>Backend</h2>
+        <table>
+            <tr>
+                <th>Technology</th>
+                <th>Purpose</th>
+                <th>Version</th>
+            </tr>
+            <tr>
+                <td>Node.js + Express</td>
+                <td>REST API server</td>
+                <td>18 / 5.x</td>
+            </tr>
+            <tr>
+                <td>MongoDB Atlas</td>
+                <td>Cloud NoSQL database</td>
+                <td>Cloud</td>
+            </tr>
+            <tr>
+                <td>Mongoose</td>
+                <td>ODM with schema validation</td>
+                <td>9.x</td>
+            </tr>
+            <tr>
+                <td>JWT + bcryptjs</td>
+                <td>Authentication &amp; password hashing</td>
+                <td>9.x / 3.x</td>
+            </tr>
+            <tr>
+                <td>Socket.io</td>
+                <td>WebSocket server for real-time events</td>
+                <td>4.8</td>
+            </tr>
+            <tr>
+                <td>CORS</td>
+                <td>Secure cross-origin resource sharing</td>
+                <td>2.8</td>
+            </tr>
+        </table>
+
+        <h2>Infrastructure &amp; DevOps</h2>
+        <table>
+            <tr>
+                <th>Service</th>
+                <th>Role</th>
+            </tr>
+            <tr>
+                <td>Vercel</td>
+                <td>Frontend hosting with auto-deploy from GitHub</td>
+            </tr>
+            <tr>
+                <td>Render</td>
+                <td>Backend hosting (free tier + keepalive)</td>
+            </tr>
+            <tr>
+                <td>MongoDB Atlas</td>
+                <td>Managed cloud database</td>
+            </tr>
+            <tr>
+                <td>UptimeRobot</td>
+                <td>Backend keepalive — pings every 5 minutes</td>
+            </tr>
+            <tr>
+                <td>GitHub</td>
+                <td>Source control + CI/CD trigger</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Section 3: Architecture -->
+    <div class="section">
+        <h1>3. System Architecture</h1>
+
+        <pre>
+User (Browser / Mobile)
+       │
+       ▼
+┌─────────────────────────────────┐
+│   Vercel CDN                    │
+│   Next.js 16 (App Router)       │
+│   medireach-tawny.vercel.app    │
+└────────────────┬────────────────┘
+                 │ HTTPS + WebSocket
+                 ▼
+┌─────────────────────────────────┐
+│   Render Web Service            │
+│   Express.js + Socket.io        │
+│   medireach-idb2.onrender.com   │
+└────────────────┬────────────────┘
+                 │ Mongoose ODM
+                 ▼
+┌─────────────────────────────────┐
+│   MongoDB Atlas (Cloud)         │
+│   Collections: hospitals,       │
+│   ambulances, donors, pharma,   │
+│   users, emergencies, doctors   │
+└─────────────────────────────────┘
+        </pre>
+
+        <h2>Real-Time Flow (SOS Emergency)</h2>
+        <ol>
+            <li>User taps SOS → <code>POST /api/emergency</code></li>
+            <li>Backend geo-queries nearest available ambulance &amp; hospital</li>
+            <li>Creates EmergencyRequest document, assigns ambulance</li>
+            <li>Emits <code>new_emergency</code> Socket.io event to all connected clients</li>
+            <li>Frontend redirects to <code>/track-ambulance/[id]</code></li>
+            <li>Live location updates via <code>ambulance_location</code> socket events</li>
+        </ol>
+    </div>
+
+    <!-- Section 4: API Endpoints -->
+    <div class="section">
+        <h1>4. API Reference</h1>
+
+        <table>
+            <tr>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/health</td>
+                <td>Server health check</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/api/auth/register</td>
+                <td>User registration</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/api/auth/login</td>
+                <td>JWT login</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/hospitals</td>
+                <td>All hospitals (filter by area, specialty)</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/ambulances</td>
+                <td>All ambulances + availability</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/api/emergency</td>
+                <td>Create SOS emergency request</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/emergency/:id</td>
+                <td>Get emergency details + tracking</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/donors</td>
+                <td>Blood donors (filter by blood group, area)</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/pharmacies</td>
+                <td>Pharmacy search by medicine name</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/doctors</td>
+                <td>Doctor directory (filter by specialty)</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/patients/:id</td>
+                <td>Patient QR profile</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Section 5: Live Deployment -->
+    <div class="section">
+        <h1>5. Deployment</h1>
+
+        <table>
+            <tr>
+                <th>Service</th>
+                <th>URL</th>
+            </tr>
+            <tr>
+                <td>🌐 Frontend (Vercel)</td>
+                <td><a href="https://medireach-tawny.vercel.app">medireach-tawny.vercel.app</a></td>
+            </tr>
+            <tr>
+                <td>⚙️ Backend API (Render)</td>
+                <td><a href="https://medireach-idb2.onrender.com/api">medireach-idb2.onrender.com/api</a></td>
+            </tr>
+            <tr>
+                <td>📦 Source Code (GitHub)</td>
+                <td><a href="https://github.com/nitinbalajii/medireach">github.com/nitinbalajii/medireach</a></td>
+            </tr>
+        </table>
+
+        <div class="highlight-box">
+            <strong>Auto-Deploy Pipeline:</strong> Every <code>git push</code> to <code>main</code> automatically
+            triggers
+            a new build on both Vercel (frontend) and Render (backend) — zero manual steps required.
+        </div>
+
+        <h2>Database Seeded Data</h2>
+        <ul>
+            <li>🏥 <strong>6 Delhi hospitals</strong> (AIIMS, Safdarjung, Fortis, Max Saket, etc.)</li>
+            <li>🚑 <strong>5 ambulances</strong> across Delhi with real GeoJSON coordinates</li>
+            <li>🩸 <strong>10 blood donors</strong> covering all major blood groups and areas</li>
+            <li>💊 <strong>5 pharmacies</strong> (Apollo, MedPlus, Jan Aushadhi, etc.) with full inventory</li>
+            <li>👨‍⚕️ <strong>Doctors</strong> across multiple specialties</li>
+        </ul>
+    </div>
 </body>
+
 </html>

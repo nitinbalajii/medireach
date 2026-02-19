@@ -1,220 +1,174 @@
-# 🏥 MediReach - Unified City Health Resource Finder
+# 🏥 MediReach — Unified City Health Resource Finder
 
-A city-level web platform connecting citizens, hospitals, ambulances, and blood donors for real-time healthcare access during emergencies in Delhi.
+> A full-stack emergency health platform connecting Delhi citizens with hospitals, ambulances, blood donors, and pharmacies in real time.
 
-![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=flat-square&logo=next.js)
-![React](https://img.shields.io/badge/React-19.2-blue?style=flat-square&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38bdf8?style=flat-square&logo=tailwind-css)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-medireach--tawny.vercel.app-blue?style=for-the-badge&logo=vercel)](https://medireach-tawny.vercel.app)
+[![Backend](https://img.shields.io/badge/API-Render-46E3B7?style=for-the-badge&logo=render)](https://medireach-idb2.onrender.com/api/health)
+[![GitHub](https://img.shields.io/badge/GitHub-nitinbalajii%2Fmedireach-181717?style=for-the-badge&logo=github)](https://github.com/nitinbalajii/medireach)
+
+---
 
 ## 🌟 Features
 
-- 🏥 **Hospital Finder** - Locate nearby hospitals with real-time bed availability
-- 🚑 **Ambulance Service** - Request ambulances with GPS tracking
-- 🩸 **Blood Donor Network** - Connect with verified donors by blood type and location
-- 📍 **Interactive Maps** - MapLibre GL integration for location visualization
-- 🔔 **Emergency Alerts** - Real-time health alerts and notifications
-- 👨‍⚕️ **Admin Panel** - Manage hospitals, donors, and emergency data
-- 📱 **Responsive Design** - Mobile-first, works on all devices
-- 🌙 **Dark Mode** - Eye-friendly interface
+| Feature | Description |
+|---|---|
+| 🆘 **SOS Emergency** | One-tap dispatch — auto-assigns nearest ambulance & hospital |
+| 🏥 **Hospital Finder** | Real-time bed availability with MapLibre interactive maps |
+| 🚑 **Ambulance Tracking** | Live GPS tracking via Socket.io WebSockets |
+| 🩸 **Blood Donor Network** | 10+ verified Delhi donors, filter by blood type & area |
+| 💊 **Medicine Finder** | Search 5 Delhi pharmacies with live inventory & pricing |
+| 👨‍⚕️ **Doctor Directory** | Find doctors by specialty, area, teleconsult availability |
+| 🔐 **JWT Auth** | Secure register/login with token-based sessions |
+| 📋 **Patient QR Profile** | Generate scannable QR codes with medical history |
+| 📊 **Admin Dashboard** | Manage hospitals, ambulances, and emergency data |
 
-## 🚀 Quick Start
+---
 
-### Prerequisites
+## 🚀 Live Deployment
 
-- **Node.js** 18+ or later
-- **pnpm** (recommended) or npm
-- Git
+| Service | URL |
+|---|---|
+| **Frontend** | https://medireach-tawny.vercel.app |
+| **Backend API** | https://medireach-idb2.onrender.com/api |
+| **Health Check** | https://medireach-idb2.onrender.com/api/health |
 
-### Installation
+---
 
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd medireach
-   ```
+## 🛠️ Tech Stack
 
-2. **Install dependencies**
-   ```bash
-   pnpm install
-   # or
-   npm install
-   ```
+### Frontend
+- **Framework:** Next.js 16.1 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **Components:** shadcn/ui + Radix UI
+- **Maps:** MapLibre GL JS (OpenFreeMap tiles — no API key needed)
+- **Real-time:** Socket.io Client
+- **Icons:** Lucide React
 
-3. **Set up environment variables**
-   ```bash
-   # Copy the example env file
-   cp env.example .env.local
-   
-   # Edit .env.local and add your API keys (optional for now)
-   ```
+### Backend
+- **Runtime:** Node.js + Express.js
+- **Database:** MongoDB Atlas (cloud)
+- **ODM:** Mongoose
+- **Auth:** JWT (jsonwebtoken + bcryptjs)
+- **Real-time:** Socket.io WebSockets
+- **Hosting:** Render (free tier + UptimeRobot keepalive)
 
-4. **Run the development server**
-   ```bash
-   pnpm dev
-   # or
-   npm run dev
-   ```
-
-5. **Open your browser**
-   ```
-   http://localhost:3000
-   ```
+---
 
 ## 📁 Project Structure
 
 ```
 medireach/
-├── app/                    # Next.js App Router pages
-│   ├── page.tsx           # Home page
-│   ├── find-hospital/     # Hospital finder
-│   ├── donors/            # Blood donor search
-│   ├── request-ambulance/ # Ambulance request
-│   ├── dashboard/         # Emergency dashboard
-│   ├── admin/             # Admin panel
-│   └── ...
-├── components/            # React components
-│   ├── ui/               # shadcn/ui components
-│   ├── hospital-map.tsx  # Map components
-│   └── ...
-├── lib/                   # Utilities and data
-│   ├── delhi-data.ts     # Mock data for Delhi
-│   └── utils.ts          # Helper functions
-├── styles/               # Global styles
-├── public/               # Static assets
-└── ...
+├── app/                        # Next.js App Router pages
+│   ├── page.tsx               # Home / landing page
+│   ├── find-hospital/         # Hospital search + map
+│   ├── donors/                # Blood donor network + map
+│   ├── find-medicine/         # Medicine inventory search
+│   ├── find-doctor/           # Doctor directory
+│   ├── request-ambulance/     # SOS + ambulance dispatch
+│   ├── track-ambulance/[id]/  # Live ambulance tracking
+│   ├── profile/               # Patient QR health profile
+│   ├── login/ & signup/       # JWT authentication
+│   └── admin/                 # Admin dashboard
+├── backend/
+│   ├── controllers/           # Business logic
+│   ├── models/                # Mongoose schemas
+│   ├── routes/                # API route definitions
+│   ├── scripts/               # DB seed scripts
+│   └── server.js              # Express + Socket.io setup
+├── components/                # Reusable React components
+│   ├── ui/                    # shadcn/ui primitives
+│   ├── donor-map.tsx          # MapLibre donor map
+│   ├── hospital-map-maplibre.tsx
+│   ├── ambulance-map.tsx
+│   └── emergency-button.tsx
+└── lib/api/client.ts          # Typed API client
 ```
 
-## 🛠️ Tech Stack
+---
 
-### Frontend (Current)
-- **Framework**: Next.js 16 (App Router)
-- **UI Library**: React 19
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **Components**: shadcn/ui + Radix UI
-- **Maps**: MapLibre GL
-- **Icons**: Lucide React
-- **Forms**: React Hook Form + Zod
+## ⚙️ Local Development
 
-### Backend (Planned)
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: MongoDB
-- **ODM**: Mongoose
-- **Authentication**: JWT or Firebase Auth
-- **SMS**: Twilio
-- **Real-time**: Socket.io
+### Prerequisites
+- Node.js 18+
+- MongoDB Atlas account (free tier)
 
-## 📋 Available Scripts
+### 1. Clone & install
 
 ```bash
-# Development
-pnpm dev          # Start dev server (localhost:3000)
-
-# Production
-pnpm build        # Build for production
-pnpm start        # Start production server
-
-# Code Quality
-pnpm lint         # Run ESLint
+git clone https://github.com/nitinbalajii/medireach.git
+cd medireach
+npm install
 ```
 
-## 🗺️ Current Status
+### 2. Frontend env
 
-### ✅ Completed
-- Frontend UI/UX for all pages
-- Mock data for Delhi hospitals, donors, and ambulances
-- Interactive map integration
-- Responsive design
-- Search and filter functionality
-- Component library setup
+```bash
+# .env.local
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
 
-### 🚧 In Progress
-- Backend API development
-- Database integration
-- Authentication system
+### 3. Backend env
 
-### 📅 Planned
-- Real-time bed availability updates
-- SMS notifications via Twilio
-- Google Maps API integration
-- Hospital staff portal
-- Mobile app (React Native)
+```bash
+cd backend
+cp .env.example .env
+# Fill in MONGODB_URI and JWT_SECRET
+```
+
+### 4. Run both servers
+
+```bash
+# Terminal 1 — backend
+cd backend && npm run dev
+
+# Terminal 2 — frontend
+npm run dev
+```
+
+Open http://localhost:3000
+
+### 5. Seed the database (optional)
+
+```bash
+cd backend
+node scripts/seedDonorsPharmacies.js   # 10 donors + 5 pharmacies
+node seed.js                           # hospitals, ambulances, doctors
+```
+
+---
 
 ## 🔑 Environment Variables
 
-Create a `.env.local` file in the root directory:
+### Frontend (`.env.local`)
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_API_URL` | Backend API base URL (include `/api`) |
 
-```env
-# Optional - currently using MapLibre (no API key needed)
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key
+### Backend (`backend/.env`)
+| Variable | Description |
+|---|---|
+| `MONGODB_URI` | MongoDB Atlas connection string |
+| `JWT_SECRET` | Secret key for JWT signing |
+| `JWT_EXPIRE` | Token expiry (e.g. `7d`) |
+| `FRONTEND_URL` | Vercel URL for CORS allowlist |
+| `NODE_ENV` | `development` or `production` |
 
-# Backend (when implemented)
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-MONGODB_URI=mongodb://localhost:27017/medireach
-JWT_SECRET=your_secret_key
-```
-
-See `env.example` for all available options.
-
-## 🌐 Deployment
-
-### Frontend Only (Current)
-Deploy to Vercel (recommended for Next.js):
-
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
-```
-
-Or push to GitHub and connect to Vercel/Netlify.
-
-### Full Stack (Future)
-- **Frontend**: Vercel/Netlify
-- **Backend**: Render/Railway/Heroku
-- **Database**: MongoDB Atlas
-
-## 📊 Mock Data
-
-Currently using static data for Delhi:
-- 6 hospitals (AIIMS, Safdarjung, Max Saket, etc.)
-- 6 blood donors (various blood types)
-- 3 ambulances (different locations)
-- Emergency alerts
-
-Located in: `lib/delhi-data.ts`
+---
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License.
-
-## 👥 Team
-
-Built for emergency healthcare access in Delhi.
-
-## 📞 Support
-
-For support, email [your-email] or open an issue.
-
-## 🙏 Acknowledgments
-
-- Delhi hospitals for inspiration
-- shadcn/ui for component library
-- MapLibre for open-source mapping
-- Next.js team for the amazing framework
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Commit your changes: `git commit -m 'feat: add my feature'`
+4. Push and open a Pull Request
 
 ---
 
-**Note**: This is currently a frontend prototype with mock data. Backend integration is in development.
+## 📝 License
+
+MIT License — free to use, modify, and distribute.
+
+---
+
+*Built for real-time emergency healthcare access across Delhi.*
