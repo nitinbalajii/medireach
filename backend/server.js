@@ -12,7 +12,9 @@ dotenv.config();
 connectDB();
 
 // CORS: allow Vercel URL in prod, any origin in dev
-const allowedOrigin = process.env.FRONTEND_URL || '*';
+// Strip trailing slash — browsers send Origin without it, a mismatch causes CORS failure
+const rawOrigin = process.env.FRONTEND_URL || '*';
+const allowedOrigin = rawOrigin === '*' ? '*' : rawOrigin.replace(/\/$/, '');
 
 // Initialize Express app
 const app = express();
