@@ -221,7 +221,7 @@ export default function FindHospital() {
             <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-red-800 font-semibold">❌ {error}</p>
               <p className="text-sm text-red-600 mt-1">
-                Make sure the backend server is running on http://localhost:5000
+                Could not connect to the backend. Please try again in a moment.
               </p>
             </div>
           )}

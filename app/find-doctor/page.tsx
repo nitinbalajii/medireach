@@ -68,7 +68,9 @@ export default function FindDoctor() {
             if (filterTeleconsult) params.append("teleconsult", "true")
 
             const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
-            const res = await fetch(`${apiBase}/doctors?${params.toString()}`)
+            const res = await fetch(`${apiBase}/doctors?${params.toString()}`, {
+                headers: { "Content-Type": "application/json" }
+            })
             const data = await res.json()
             if (!data.success) throw new Error(data.message)
             setDoctors(data.data)
@@ -125,8 +127,8 @@ export default function FindDoctor() {
                                     type="button"
                                     onClick={() => setSelectedSpecialty(s)}
                                     className={`px-3 py-1 rounded-full text-sm font-medium transition-colors border ${selectedSpecialty === s
-                                            ? "bg-primary text-primary-foreground border-primary"
-                                            : "bg-background border-border hover:bg-muted"
+                                        ? "bg-primary text-primary-foreground border-primary"
+                                        : "bg-background border-border hover:bg-muted"
                                         }`}
                                 >
                                     {s}
