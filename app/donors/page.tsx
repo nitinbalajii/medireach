@@ -4,8 +4,8 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Droplet, MapPin, Calendar, Star, Phone, Mail, CheckCircle, Loader2 } from "lucide-react"
-import Link from "next/link"
 import { DonorMap } from "@/components/donor-map"
 import { Navbar } from "@/components/navbar"
 import { donorAPI } from "@/lib/api/client"
@@ -223,19 +223,123 @@ export default function DonorsPage() {
         </div>
 
         {/* Become a Donor CTA */}
-        <Card className="mt-12 p-8 bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
-          <div className="text-center">
-            <Droplet className="w-12 h-12 text-primary mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-3">Become a Blood Donor</h2>
-            <p className="text-muted-foreground mb-6">
-              Join our network of verified donors and help save lives in your community. Every donation can save up to 3 lives.
-            </p>
-            <Button size="lg" asChild>
-              <Link href="/signup">Register as Donor</Link>
-            </Button>
-          </div>
-        </Card>
+        <BecomeDonorModal onSuccess={fetchDonors} />
       </div>
     </div>
+  )
+}
+
+// ── Become a Donor Modal ─────────────────────────────────────────────────────
+function BecomeDonorModal({ onSuccess }: { onSuccess: () => void }) {
+  const [open, setOpen] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [done, setDone] = useState(false)
+  const [error, setError] = useState("")
+  const [form, setForm] = useState({
+    name: "", phone: "", email: "", bloodGroup: "", area: "",
+  })
+
+  const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+  const areas = ["North Delhi", "South Delhi", "East Delhi", "West Delhi", "Central Delhi", "Noida", "Gurugram", "Faridabad", "Ghaziabad"]
+
+  const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }))
+
+  const handleSubmit = async () => {
+    if (!form.name || !form.phone || !form.bloodGroup || !form.area) {
+      setError("Name, phone, blood group, and area are required.")
+      return
+    }
+    setError("")
+    setSubmitting(true)
+    try {
+      await donorAPI.register({ ...form, available: true, totalDonations: 0 })
+      setDone(true)
+      onSuccess()
+      setTimeout(() => { setOpen(false); setDone(false); setForm({ name: "", phone: "", email: "", bloodGroup: "", area: "" }) }, 2000)
+    } catch (err: any) {
+      setError(err.message || "Registration failed. Please try again.")
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <Card className="mt-12 p-8 bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
+      <div className="text-center">
+        <Droplet className="w-12 h-12 text-primary mx-auto mb-4" />
+        <h2 className="text-2xl font-bold mb-3">Become a Blood Donor</h2>
+        <p className="text-muted-foreground mb-6">
+          Join our network of verified donors and help save lives in your community. Every donation can save up to 3 lives.
+        </p>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button size="lg">Register as Donor</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[480px]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Droplet className="w-5 h-5 text-red-500" /> Register as Blood Donor
+              </DialogTitle>
+              <DialogDescription>
+                Your details will appear in the donor network so people can contact you during emergencies.
+              </DialogDescription>
+            </DialogHeader>
+            {done ? (
+              <div className="flex flex-col items-center py-8 gap-3">
+                <CheckCircle className="w-14 h-14 text-green-500" />
+                <p className="font-semibold text-green-700">You&apos;re registered!</p>
+                <p className="text-sm text-muted-foreground">You now appear in the donor list.</p>
+              </div>
+            ) : (
+              <div className="space-y-4 py-2">
+                {error && <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded">{error}</p>}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2">
+                    <label className="text-xs font-medium mb-1 block">Full Name *</label>
+                    <Input placeholder="Rajesh Kumar" value={form.name} onChange={(e) => set("name", e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium mb-1 block">Phone *</label>
+                    <Input placeholder="9876543210" value={form.phone} onChange={(e) => set("phone", e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium mb-1 block">Email (optional)</label>
+                    <Input placeholder="you@email.com" value={form.email} onChange={(e) => set("email", e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium mb-1 block">Blood Group *</label>
+                    <select
+                      className="w-full border rounded-md px-3 py-2 text-sm bg-background"
+                      value={form.bloodGroup}
+                      onChange={(e) => set("bloodGroup", e.target.value)}
+                    >
+                      <option value="">Select</option>
+                      {bloodGroups.map((g) => <option key={g} value={g}>{g}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium mb-1 block">Area *</label>
+                    <select
+                      className="w-full border rounded-md px-3 py-2 text-sm bg-background"
+                      value={form.area}
+                      onChange={(e) => set("area", e.target.value)}
+                    >
+                      <option value="">Select area</option>
+                      {areas.map((a) => <option key={a} value={a}>{a}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <Button variant="outline" onClick={() => setOpen(false)} className="flex-1">Cancel</Button>
+                  <Button onClick={handleSubmit} disabled={submitting} className="flex-1">
+                    {submitting ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Registering...</> : "Register Now"}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+      </div>
+    </Card>
   )
 }

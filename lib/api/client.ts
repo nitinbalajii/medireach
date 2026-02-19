@@ -151,6 +151,9 @@ export const emergencyAPI = {
     getById: async (id: string) => {
         return fetchAPI(`/emergency/${id}`);
     },
+
+    // Get all emergency requests (for alerts page)
+    getAll: async () => fetchAPI('/emergency'),
 };
 
 // Patient API
@@ -239,3 +242,13 @@ export const pharmacyAPI = {
         return fetchAPI(`/pharmacies${query}`);
     },
 };
+
+// Crowd Report API
+export const reportAPI = {
+    submit: async (data: { hospitalId: string; reportType: string; description: string }) =>
+        fetchAPI('/reports', { method: 'POST', body: JSON.stringify(data) }),
+    getByHospital: async (hospitalId: string) =>
+        fetchAPI(`/reports/hospital/${hospitalId}`),
+};
+
+
