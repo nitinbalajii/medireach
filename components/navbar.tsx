@@ -29,9 +29,6 @@ export function Navbar() {
                         <Link href="/request-ambulance" className="text-foreground hover:text-primary transition">
                             Ambulance
                         </Link>
-                        <Link href="/about" className="text-foreground hover:text-primary transition">
-                            About
-                        </Link>
 
                         {/* Services Dropdown */}
                         <div
@@ -74,6 +71,9 @@ export function Navbar() {
                         <Link href="/profile" className="text-foreground hover:text-primary transition">
                             Profile
                         </Link>
+                        <Link href="/about" className="text-foreground hover:text-primary transition">
+                            About
+                        </Link>
                     </div>
 
                     {/* Auth Buttons */}
@@ -104,9 +104,6 @@ export function Navbar() {
                         <Link href="/request-ambulance" className="block py-2 text-foreground hover:text-primary">
                             Ambulance
                         </Link>
-                        <Link href="/about" className="block py-2 text-foreground hover:text-primary">
-                            About
-                        </Link>
                         <Link href="/find-medicine" className="block py-2 text-foreground hover:text-primary">
                             Find Medicine
                         </Link>
@@ -118,6 +115,9 @@ export function Navbar() {
                         </Link>
                         <Link href="/profile" className="block py-2 text-foreground hover:text-primary">
                             My Profile
+                        </Link>
+                        <Link href="/about" className="block py-2 text-foreground hover:text-primary">
+                            About
                         </Link>
                         <div className="flex gap-2 pt-2">
                             <Button variant="outline" className="flex-1 bg-transparent" asChild>
