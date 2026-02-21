@@ -2,218 +2,300 @@
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Heart, Users, Target, Zap, Globe, Award } from "lucide-react"
+import {
+  Heart,
+  Users,
+  Target,
+  Zap,
+  Globe,
+  Award,
+  Ambulance,
+  Lightbulb,
+  ShieldAlert,
+  Code,
+  Database,
+  Cpu,
+  ArrowRight
+} from "lucide-react"
 import Link from "next/link"
 
 export default function AboutPage() {
-  const teamMembers = [
-    {
-      name: "Dr. Rajesh Singh",
-      role: "Founder & CEO",
-      bio: "Healthcare technology innovator with 15+ years in emergency medical services",
-    },
-    {
-      name: "Priya Sharma",
-      role: "Head of Operations",
-      bio: "Led emergency response systems for Delhi hospitals for 10 years",
-    },
-    {
-      name: "Amit Kumar",
-      role: "Chief Technology Officer",
-      bio: "Building scalable health tech platforms that save lives",
-    },
-    {
-      name: "Dr. Neha Gupta",
-      role: "Medical Director",
-      bio: "AIIMS Delhi specialist ensuring clinical excellence in our platform",
-    },
-  ]
-
-  const values = [
-    {
-      icon: <Heart className="w-8 h-8 text-primary" />,
-      title: "Life-Saving Impact",
-      description: "Every decision is driven by our mission to save lives and reduce emergency response times.",
-    },
-    {
-      icon: <Users className="w-8 h-8 text-accent" />,
-      title: "Community First",
-      description: "We believe in empowering communities to care for their own during medical emergencies.",
-    },
+  const provisions = [
     {
       icon: <Target className="w-8 h-8 text-primary" />,
-      title: "Transparency",
-      description: "Real-time data ensures hospitals, donors, and patients have complete information.",
+      title: "Location-based Discovery",
+      description: "Instantly find hospitals and trauma centers nearest to your current location.",
+    },
+    {
+      icon: <Award className="w-8 h-8 text-accent" />,
+      title: "Verified Listings",
+      description: "Structured hospital and specialty information sourced from official healthcare platforms.",
+    },
+    {
+      icon: <Users className="w-8 h-8 text-primary" />,
+      title: "Doctor Directory",
+      description: "Comprehensive information on specialists available across city hospitals.",
     },
     {
       icon: <Zap className="w-8 h-8 text-accent" />,
-      title: "Speed & Reliability",
-      description: "Our technology ensures fastest response times for critical medical emergencies.",
+      title: "One-tap SOS",
+      description: "Direct emergency triggering system that connects you to immediate aid.",
+    },
+    {
+      icon: <Ambulance className="w-8 h-8 text-primary" />,
+      title: "Ambulance Interface",
+      description: "Simplified request system for coordinated emergency transport services.",
+    },
+    {
+      icon: <Cpu className="w-8 h-8 text-accent" />,
+      title: "Scalable Infrastructure",
+      description: "Built on a robust backend designed for real-time healthcare integration.",
     },
   ]
 
-  const achievements = [
-    { number: "15,284+", label: "Lives Helped" },
-    { number: "98%", label: "Response Rate" },
-    { number: "5 min", label: "Avg Response Time" },
-    { number: "50+", label: "Hospitals Partnered" },
-    { number: "10,000+", label: "Verified Donors" },
-    { number: "24/7", label: "Support Available" },
+  const technicalStack = [
+    { icon: <Globe className="w-5 h-5" />, label: "Secure Backend APIs" },
+    { icon: <Cpu className="w-5 h-5" />, label: "Cloud Infrastructure" },
+    { icon: <Database className="w-5 h-5" />, label: "Structured Data Modeling" },
+    { icon: <Target className="w-5 h-5" />, label: "Geolocation Services" },
+    { icon: <Code className="w-5 h-5" />, label: "RESTful Communication" },
   ]
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-white border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Navbar Stub */}
+      <div className="bg-white border-b border-border sticky top-0 z-50">
+        <div className="max-max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <Heart className="w-8 h-8 text-primary" fill="currentColor" />
               <span className="text-2xl font-bold text-primary">MediReach</span>
+            </Link>
+            <div className="hidden md:flex items-center gap-6">
+              <Link href="/" className="text-sm font-medium hover:text-primary">Home</Link>
+              <Link href="/find-hospital" className="text-sm font-medium hover:text-primary">Hospitals</Link>
+              <Link href="/donors" className="text-sm font-medium hover:text-primary">Donors</Link>
             </div>
-            <Button variant="outline" asChild>
-              <Link href="/">Home</Link>
+            <Button size="sm" asChild>
+              <Link href="/contact">Support</Link>
             </Button>
           </div>
         </div>
       </div>
 
       {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/10 to-accent/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold mb-6">About MediReach Delhi</h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Revolutionizing emergency healthcare access in Delhi through technology, transparency, and community
-            collaboration
+      <section className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-slate-900 text-white">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80')] opacity-10 bg-cover bg-center" />
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary-foreground text-xs font-bold uppercase tracking-wider mb-6 border border-primary/30">
+            <Ambulance size={14} />
+            About MediReach
+          </div>
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+            Bridging Technology and <span className="text-primary italic font-serif text-3xl block md:inline">Emergency Healthcare</span>
+          </h1>
+          <p className="text-xl text-slate-300 mb-10 leading-relaxed font-light">
+            MediReach is a city-focused emergency healthcare platform designed to make critical medical support faster, smarter, and more accessible.
           </p>
-          <div className="w-12 h-1 bg-primary mx-auto" />
+          <div className="w-20 h-1.5 bg-primary mx-auto rounded-full" />
         </div>
       </section>
 
-      {/* Mission Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      {/* Problem & Solution */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-3xl font-bold mb-6 text-slate-900">Solving the Gap</h2>
+              <div className="space-y-4 text-lg text-muted-foreground">
+                <p>
+                  In emergency situations, people often struggle to quickly locate nearby hospitals, identify available specialists, or coordinate ambulance services.
+                </p>
+                <p className="font-semibold text-slate-800">
+                  MediReach was built to solve that gap using technology.
+                </p>
+                <p>
+                  The platform centralizes verified hospital information, specialty listings, emergency contact access, and SOS functionality into a single, unified system designed for real-world usability.
+                </p>
+              </div>
+            </div>
+            <div className="bg-slate-50 border border-slate-100 rounded-3xl p-10 relative">
+              <div className="absolute top-0 right-0 p-6 opacity-10">
+                <Lightbulb size={120} className="text-primary" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-primary">🎯 Our Mission</h3>
+              <p className="text-lg text-slate-700 leading-relaxed mb-6 italic">
+                "To reduce confusion and response time during medical emergencies by building a reliable digital bridge between individuals and healthcare services."
+              </p>
+              <p className="text-slate-600">
+                By integrating maps, structured hospital data, and emergency-trigger systems, MediReach aims to create a streamlined emergency response experience at a city level.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Grid */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-4">💡 What MediReach Provides</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              More than a hospital directory—a full-stack healthcare support system.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {provisions.map((item, index) => (
+              <Card key={index} className="p-8 border-none shadow-sm hover:shadow-md transition-shadow">
+                <div className="mb-4 p-2 bg-slate-50 inline-block rounded-xl">{item.icon}</div>
+                <h3 className="text-lg font-bold mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Real World Architecture */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
-            <div>
-              <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
-              <p className="text-lg text-muted-foreground mb-6">
-                To provide instant access to emergency healthcare resources for every resident of Delhi by connecting
-                hospitals, ambulances, blood donors, and patients through a seamless digital platform.
-              </p>
-              <p className="text-lg text-muted-foreground mb-6">
-                We believe that no life should be lost due to lack of information or delayed access to critical
-                resources.
-              </p>
+          <div className="bg-primary rounded-[2.5rem] p-12 text-white overflow-hidden relative shadow-2xl shadow-primary/20">
+            <div className="absolute -right-20 -bottom-20 opacity-10">
+              <Cpu size={300} />
             </div>
-            <div className="bg-primary/10 rounded-2xl p-8 flex items-center justify-center min-h-80">
-              <div className="text-center">
-                <Globe className="w-24 h-24 text-primary mx-auto mb-4" />
-                <p className="font-semibold text-foreground">Connected Healthcare Ecosystem</p>
+            <div className="relative z-10">
+              <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                <Code />
+                Built With Real-World Architecture
+              </h2>
+              <p className="text-lg text-white/90 mb-10 max-w-2xl">
+                MediReach is built using modern full-stack development practices to simulate real-world healthcare coordination challenges.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {technicalStack.map((tech, i) => (
+                  <div key={i} className="flex items-center gap-3 bg-white/10 p-3 rounded-xl border border-white/5">
+                    {tech.icon}
+                    <span className="font-medium text-sm">{tech.label}</span>
+                  </div>
+                ))}
               </div>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="bg-accent/10 rounded-2xl p-8 flex items-center justify-center min-h-80 order-last md:order-first">
-              <div className="text-center">
-                <Award className="w-24 h-24 text-accent mx-auto mb-4" />
-                <p className="font-semibold text-foreground">Excellence & Innovation</p>
-              </div>
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold mb-6">Our Vision</h2>
-              <p className="text-lg text-muted-foreground mb-6">
-                A future where every medical emergency in Delhi is met with instant response, complete transparency, and
-                coordinated care across all healthcare providers.
-              </p>
-              <p className="text-lg text-muted-foreground">
-                We envision a healthcare system where technology empowers patients, healthcare workers, and donors to
-                save lives together.
-              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Values */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
+      {/* Team Section */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-muted/30">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16">Our Values</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {values.map((value, index) => (
-              <Card key={index} className="p-8">
-                <div className="mb-4">{value.icon}</div>
-                <h3 className="text-xl font-semibold mb-3">{value.title}</h3>
-                <p className="text-muted-foreground">{value.description}</p>
-              </Card>
-            ))}
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-4">👨‍💻 About the Team</h2>
+            <p className="text-muted-foreground text-lg">The developers behind the MediReach vision.</p>
           </div>
-        </div>
-      </section>
 
-      {/* Achievements */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-primary text-white">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16">Our Impact</h2>
-          <div className="grid md:grid-cols-6 gap-8 text-center">
-            {achievements.map((achievement, index) => (
-              <div key={index}>
-                <p className="text-4xl font-bold mb-2">{achievement.number}</p>
-                <p className="text-white/80">{achievement.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16">Our Team</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {teamMembers.map((member, index) => (
-              <Card key={index} className="p-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold text-xl mb-4">
-                  {member.name.split(" ")[0][0]}
-                  {member.name.split(" ")[1][0]}
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Nitin */}
+            <Card className="p-10 border-slate-200 overflow-hidden relative">
+              <div className="flex items-start gap-6 mb-8">
+                <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center text-white text-3xl font-black">
+                  NB
                 </div>
-                <h3 className="text-xl font-semibold">{member.name}</h3>
-                <p className="text-primary font-medium mb-3">{member.role}</p>
-                <p className="text-muted-foreground">{member.bio}</p>
-              </Card>
-            ))}
+                <div>
+                  <h3 className="text-2xl font-bold">Nitin Balajee</h3>
+                  <p className="text-primary font-semibold text-sm">Full-Stack Developer | CSE</p>
+                  <p className="text-xs text-muted-foreground mt-1 tracking-wider uppercase">Project Lead</p>
+                </div>
+              </div>
+              <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+                MediReach was conceptualized and developed as a comprehensive final-year engineering project focused on combining technical depth with real-world social impact.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {["Backend Arch", "API Design", "Cloud Deploy", "Mobile Sync"].map(tag => (
+                  <span key={tag} className="text-[10px] font-bold px-2 py-1 bg-slate-100 rounded-md text-slate-500 uppercase">{tag}</span>
+                ))}
+              </div>
+            </Card>
+
+            {/* Talha */}
+            <Card className="p-10 border-slate-200">
+              <div className="flex items-start gap-6 mb-8">
+                <div className="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center text-white text-3xl font-black">
+                  TS
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold">Talha Siddiqui</h3>
+                  <p className="text-slate-700 font-semibold text-sm">Full-Stack Developer | CSE</p>
+                  <p className="text-xs text-muted-foreground mt-1 tracking-wider uppercase">UI & Data Specialist</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <p className="text-sm font-bold text-slate-800 underline decoration-primary underline-offset-4">Key Contributions:</p>
+                <ul className="text-sm text-slate-600 space-y-2">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1 h-1 bg-primary rounded-full" />
+                    UI layout & visual consistency
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1 h-1 bg-primary rounded-full" />
+                    Frontend component styling
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1 h-1 bg-primary rounded-full" />
+                    Hospital data compilation
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1 h-1 bg-primary rounded-full" />
+                    Functional testing & feedback
+                  </li>
+                </ul>
+              </div>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/10 to-accent/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6">Join Our Mission</h2>
-          <p className="text-lg text-muted-foreground mb-8">
-            Whether you're a healthcare provider, blood donor, or community member, we need your support to build a
-            better emergency healthcare system for Delhi.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/contact">Get In Touch</Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/register-donor">Become a Donor</Link>
-            </Button>
+      {/* Vision & Disclaimer */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-100">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+              <Globe className="text-primary" />
+              🌍 Vision
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              The long-term vision of MediReach is to evolve into a scalable emergency healthcare coordination platform capable of supporting city-wide response systems and community-driven healthcare accessibility.
+            </p>
+          </div>
+
+          <div className="bg-red-50 border border-red-100 rounded-2xl p-6 flex gap-4">
+            <ShieldAlert className="text-red-500 shrink-0 mt-1" />
+            <div>
+              <h4 className="font-bold text-red-900 mb-1">⚠ Disclaimer</h4>
+              <p className="text-sm text-red-700 leading-relaxed">
+                MediReach aggregates publicly available hospital and doctor information and is continuously evolving. While the platform assists users in locating emergency services, it does not replace official emergency systems. In life-threatening situations, users are advised to contact official emergency services directly.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-foreground text-white py-12 px-4 sm:px-6 lg:px-8">
+      <footer className="bg-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Heart className="w-6 h-6" fill="currentColor" />
-            <span className="font-bold">MediReach Delhi</span>
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <Heart className="w-8 h-8 text-primary" fill="currentColor" />
+            <span className="text-2xl font-bold tracking-tight">MediReach</span>
           </div>
-          <p className="text-white/60 mb-4">Emergency health resources at your fingertips for Delhi.</p>
-          <p className="text-white/60 text-sm">&copy; 2025 MediReach Delhi. All rights reserved.</p>
+          <p className="text-slate-400 mb-8 max-w-md mx-auto">
+            Emergency health resources at your fingertips. Reducing response time, saving lives.
+          </p>
+          <div className="flex justify-center gap-8 mb-12">
+            <Link href="/" className="text-sm text-slate-500 hover:text-white transition-colors">Home</Link>
+            <Link href="/about" className="text-sm text-slate-500 hover:text-white transition-colors">About</Link>
+            <Link href="/contact" className="text-sm text-slate-500 hover:text-white transition-colors">Support</Link>
+          </div>
+          <div className="text-slate-600 text-xs tracking-widest uppercase">
+            &copy; 2026 MediReach Delhi. Final Year Engineering Project.
+          </div>
         </div>
       </footer>
     </div>
