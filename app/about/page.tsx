@@ -18,6 +18,7 @@ import {
   ArrowRight
 } from "lucide-react"
 import Link from "next/link"
+import { Navbar } from "@/components/navbar"
 
 export default function AboutPage() {
   const provisions = [
@@ -63,25 +64,8 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navbar Stub */}
-      <div className="bg-white border-b border-border sticky top-0 z-50">
-        <div className="max-max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <Heart className="w-8 h-8 text-primary" fill="currentColor" />
-              <span className="text-2xl font-bold text-primary">MediReach</span>
-            </Link>
-            <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-sm font-medium hover:text-primary">Home</Link>
-              <Link href="/find-hospital" className="text-sm font-medium hover:text-primary">Hospitals</Link>
-              <Link href="/donors" className="text-sm font-medium hover:text-primary">Donors</Link>
-            </div>
-            <Button size="sm" asChild>
-              <Link href="/contact">Support</Link>
-            </Button>
-          </div>
-        </div>
-      </div>
+      {/* Navigation */}
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-slate-900 text-white">

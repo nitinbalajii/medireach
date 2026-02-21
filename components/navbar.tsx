@@ -29,6 +29,9 @@ export function Navbar() {
                         <Link href="/request-ambulance" className="text-foreground hover:text-primary transition">
                             Ambulance
                         </Link>
+                        <Link href="/about" className="text-foreground hover:text-primary transition">
+                            About
+                        </Link>
 
                         {/* Services Dropdown */}
                         <div
@@ -100,6 +103,9 @@ export function Navbar() {
                         </Link>
                         <Link href="/request-ambulance" className="block py-2 text-foreground hover:text-primary">
                             Ambulance
+                        </Link>
+                        <Link href="/about" className="block py-2 text-foreground hover:text-primary">
+                            About
                         </Link>
                         <Link href="/find-medicine" className="block py-2 text-foreground hover:text-primary">
                             Find Medicine
