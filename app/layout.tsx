@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   title: "MediReach - Emergency Health Resource Finder",
   description: "Connect with hospitals, ambulances, and blood donors in real-time",
   generator: "v0.app",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 }
 
 export default function RootLayout({
