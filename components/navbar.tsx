@@ -13,9 +13,9 @@ export function Navbar() {
     return (
         <nav className="sticky top-0 z-50 bg-white border-b border-border">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16">
+                <div className="flex justify-between items-center h-20">
                     <Link href="/" className="flex items-center">
-                        <Image src="/logo.png" alt="MediReach Logo" width={220} height={55} className="h-12 w-auto object-contain" priority />
+                        <Image src="/logo.png" alt="MediReach" width={320} height={64} className="h-16 w-auto object-contain" priority />
                     </Link>
 
                     {/* Desktop Menu */}

@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   description: "Connect with hospitals, ambulances, and blood donors in real-time",
   generator: "v0.app",
   icons: {
-    icon: "/logo-icon.png",
-    apple: "/logo-icon.png",
+    icon: "/icon.png",
+    apple: "/icon.png",
   },
 }
 
