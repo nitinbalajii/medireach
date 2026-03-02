@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Menu, X, ChevronDown, Pill, Stethoscope } from "lucide-react"
+import { Menu, X, ChevronDown, Pill, Stethoscope, Droplets } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -20,13 +20,13 @@ export function Navbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex gap-8 items-center">
-                        <Link href="/" className="text-foreground hover:text-primary transition font-medium">
+                        <Link href="/" className="text-base font-semibold text-foreground hover:text-primary transition">
                             Home
                         </Link>
-                        <Link href="/find-hospital" className="text-foreground hover:text-primary transition">
+                        <Link href="/find-hospital" className="text-base font-medium text-foreground hover:text-primary transition">
                             Hospitals
                         </Link>
-                        <Link href="/request-ambulance" className="text-foreground hover:text-primary transition">
+                        <Link href="/request-ambulance" className="text-base font-medium text-foreground hover:text-primary transition">
                             Ambulance
                         </Link>
 
@@ -36,42 +36,42 @@ export function Navbar() {
                             onMouseEnter={() => setServicesOpen(true)}
                             onMouseLeave={() => setServicesOpen(false)}
                         >
-                            <button className="text-foreground hover:text-primary transition flex items-center gap-1">
+                            <button className="text-base font-medium text-foreground hover:text-primary transition flex items-center gap-1">
                                 Services
                                 <ChevronDown className="w-4 h-4" />
                             </button>
 
                             {servicesOpen && (
-                                <div className="absolute top-full left-0 w-48 bg-white border border-border rounded-lg shadow-lg py-2 z-50">
+                                <div className="absolute top-full left-0 w-52 bg-white border border-border rounded-lg shadow-lg py-2 z-50">
                                     <Link
                                         href="/find-medicine"
-                                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition"
+                                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium hover:bg-gray-100 transition"
                                     >
                                         <Pill className="w-4 h-4" />
                                         Find Medicine
                                     </Link>
                                     <Link
                                         href="/find-doctor"
-                                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition"
+                                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium hover:bg-gray-100 transition"
                                     >
                                         <Stethoscope className="w-4 h-4" />
                                         Find Doctors
                                     </Link>
                                     <Link
                                         href="/donors"
-                                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition"
+                                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium hover:bg-gray-100 transition"
                                     >
-                                        <Heart className="w-4 h-4" />
+                                        <Droplets className="w-4 h-4" />
                                         Blood Donors
                                     </Link>
                                 </div>
                             )}
                         </div>
 
-                        <Link href="/profile" className="text-foreground hover:text-primary transition">
+                        <Link href="/profile" className="text-base font-medium text-foreground hover:text-primary transition">
                             Profile
                         </Link>
-                        <Link href="/about" className="text-foreground hover:text-primary transition">
+                        <Link href="/about" className="text-base font-medium text-foreground hover:text-primary transition">
                             About
                         </Link>
                     </div>
