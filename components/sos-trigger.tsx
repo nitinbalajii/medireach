@@ -52,9 +52,6 @@ export function SOSTrigger() {
 
             if (response.success) {
                 setEmergencyData(response.data)
-
-                // TODO: Send SMS to emergency contacts (when Twilio is configured)
-                console.log('SOS activated - SMS would be sent to emergency contacts')
             }
         } catch (error) {
             console.error('SOS activation error:', error)
@@ -79,10 +76,10 @@ export function SOSTrigger() {
                             <AlertTriangle className="w-10 h-10 text-white" />
                         </div>
 
-                        <h1 className="text-3xl font-bold text-red-600">🆘 SOS ACTIVATED</h1>
+                        <h1 className="text-3xl font-bold text-red-600">SOS ACTIVATED</h1>
 
                         <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-left">
-                            <h3 className="font-semibold text-green-900 mb-2">✓ Actions Completed:</h3>
+                            <h3 className="font-semibold text-green-900 mb-2">Actions Completed:</h3>
                             <ul className="space-y-1 text-sm text-green-800">
                                 <li>✓ Location detected</li>
                                 <li>✓ Ambulance requested</li>
@@ -93,7 +90,7 @@ export function SOSTrigger() {
 
                         {emergencyData.hospital && (
                             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-left">
-                                <h3 className="font-semibold text-blue-900 mb-2">🏥 Destination Hospital:</h3>
+                                <h3 className="font-semibold text-blue-900 mb-2">Destination Hospital:</h3>
                                 <p className="font-medium">{emergencyData.hospital.name}</p>
                                 <p className="text-sm text-muted-foreground">{emergencyData.hospital.address}</p>
                             </div>

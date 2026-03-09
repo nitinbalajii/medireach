@@ -11,7 +11,6 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "MediReach - Emergency Health Resource Finder",
   description: "Connect with hospitals, ambulances, and blood donors in real-time",
-  generator: "v0.app",
   icons: {
     icon: "/icon.png",
     apple: "/icon.png",
