@@ -85,4 +85,4 @@ node seed.js
 
 ---
 
-Built by Nitin Balaji — final year B.Tech project, 2025-26.
+Built by Nitin Balajee — final year B.Tech project, 2025-26.
