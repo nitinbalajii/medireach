@@ -71,6 +71,9 @@ export function Navbar() {
                         <Link href="/profile" className="text-base font-medium text-foreground hover:text-primary transition">
                             Profile
                         </Link>
+                        <Link href="/admin" className="text-base font-medium text-foreground hover:text-primary transition">
+                            Admin
+                        </Link>
                         <Link href="/about" className="text-base font-medium text-foreground hover:text-primary transition">
                             About
                         </Link>
@@ -115,6 +118,9 @@ export function Navbar() {
                         </Link>
                         <Link href="/profile" className="block py-2 text-foreground hover:text-primary">
                             My Profile
+                        </Link>
+                        <Link href="/admin" className="block py-2 text-foreground hover:text-primary">
+                            Admin Dashboard
                         </Link>
                         <Link href="/about" className="block py-2 text-foreground hover:text-primary">
                             About
