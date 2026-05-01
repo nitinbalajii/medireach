@@ -71,6 +71,65 @@ export default function AmbulanceLiveTracker({
         }
         map.current.fitBounds(bounds, { padding: 50 })
 
+        // Draw route line after map loads
+        map.current.on('load', () => {
+            if (!map.current) return
+
+            // Build route coordinates: ambulance → patient → hospital
+            const routeCoords: [number, number][] = [
+                [ambulanceLocation.lng, ambulanceLocation.lat],
+                [patientLocation.lng, patientLocation.lat],
+            ]
+            if (hospitalLocation) {
+                routeCoords.push([hospitalLocation.lng, hospitalLocation.lat])
+            }
+
+            // Add route source
+            map.current.addSource('route', {
+                type: 'geojson',
+                data: {
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: routeCoords,
+                    },
+                },
+            })
+
+            // Add dashed route line
+            map.current.addLayer({
+                id: 'route-line',
+                type: 'line',
+                source: 'route',
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round',
+                },
+                paint: {
+                    'line-color': '#3b82f6',
+                    'line-width': 3,
+                    'line-dasharray': [2, 2],
+                },
+            })
+
+            // Add solid shadow line behind dashed line for depth
+            map.current.addLayer({
+                id: 'route-shadow',
+                type: 'line',
+                source: 'route',
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round',
+                },
+                paint: {
+                    'line-color': '#93c5fd',
+                    'line-width': 6,
+                    'line-opacity': 0.4,
+                },
+            }, 'route-line')
+        })
+
         return () => {
             map.current?.remove()
             map.current = null
