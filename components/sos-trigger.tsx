@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { AlertTriangle, Phone, MapPin, Heart, Loader2 } from "lucide-react"
 import { emergencyAPI } from "@/lib/api/client"
-import Link from "next/link"
 
 export function SOSTrigger() {
+    const router = useRouter()
     const [activating, setActivating] = useState(false)
     const [sosActive, setSosActive] = useState(false)
     const [countdown, setCountdown] = useState(3)
@@ -97,12 +98,17 @@ export function SOSTrigger() {
                         )}
 
                         <div className="space-y-2">
-                            <Link href={`/track-ambulance/${emergencyData.emergency._id}`}>
-                                <Button className="w-full bg-blue-600 hover:bg-blue-700" size="lg">
+                                <Button
+                                    className="w-full bg-blue-600 hover:bg-blue-700"
+                                    size="lg"
+                                    onClick={() => {
+                                        setSosActive(false)
+                                        router.push(`/track-ambulance/${emergencyData.emergency._id}`)
+                                    }}
+                                >
                                     <MapPin className="w-5 h-5 mr-2" />
                                     Track Ambulance
                                 </Button>
-                            </Link>
 
                             <Button
                                 className="w-full bg-red-600 hover:bg-red-700"

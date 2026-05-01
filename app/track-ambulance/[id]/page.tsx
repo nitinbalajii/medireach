@@ -61,16 +61,21 @@ export default function TrackAmbulance() {
                 setEmergency(response.data)
 
                 // Set initial ambulance location and compute ETA
-                if (response.data.assignedAmbulance?.currentLocation) {
-                    const ambLoc = response.data.assignedAmbulance.currentLocation
-                    setAmbulanceLocation(ambLoc)
+                const amb = response.data.assignedAmbulance
+                const patLoc = response.data.location
 
-                    // Use backend ETA if available, otherwise compute from coordinates
-                    if (response.data.assignedAmbulance.eta) {
-                        setEta(response.data.assignedAmbulance.eta)
-                    } else if (response.data.location) {
-                        setEta(calculateETA(ambLoc, response.data.location))
-                    }
+                if (amb?.currentLocation) {
+                    setAmbulanceLocation(amb.currentLocation)
+                }
+
+                // Priority: backend ETA > computed from coordinates > sensible default
+                if (amb?.eta) {
+                    setEta(amb.eta)
+                } else if (amb?.currentLocation && patLoc) {
+                    setEta(calculateETA(amb.currentLocation, patLoc))
+                } else if (patLoc) {
+                    // No ambulance location available — estimate from a typical Delhi distance
+                    setEta(8)
                 }
 
                 setError(null)
