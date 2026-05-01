@@ -16,6 +16,32 @@ const AmbulanceLiveTracker = dynamic(
     { ssr: false, loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-lg" /> }
 )
 
+// Haversine distance between two points in km
+function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    const R = 6371 // Earth radius in km
+    const toRad = (d: number) => (d * Math.PI) / 180
+    const dLat = toRad(lat2 - lat1)
+    const dLng = toRad(lng2 - lng1)
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return R * c
+}
+
+// Calculate ETA in minutes from two GeoJSON points
+function calculateETA(ambulanceLoc: any, patientLoc: any): number {
+    if (!ambulanceLoc?.coordinates || !patientLoc?.coordinates) return 0
+    const straightDist = haversineDistance(
+        ambulanceLoc.coordinates[1], ambulanceLoc.coordinates[0],
+        patientLoc.coordinates[1], patientLoc.coordinates[0]
+    )
+    const roadDist = straightDist * 1.4 // road distance multiplier
+    const avgSpeed = 40 // km/h average city speed
+    return Math.max(1, Math.round((roadDist / avgSpeed) * 60))
+}
+
 export default function TrackAmbulance() {
     const params = useParams()
     const requestId = params.id as string
@@ -34,10 +60,17 @@ export default function TrackAmbulance() {
                 const response = await emergencyAPI.getById(requestId)
                 setEmergency(response.data)
 
-                // Set initial ambulance location
+                // Set initial ambulance location and compute ETA
                 if (response.data.assignedAmbulance?.currentLocation) {
-                    setAmbulanceLocation(response.data.assignedAmbulance.currentLocation)
-                    setEta(response.data.assignedAmbulance.eta)
+                    const ambLoc = response.data.assignedAmbulance.currentLocation
+                    setAmbulanceLocation(ambLoc)
+
+                    // Use backend ETA if available, otherwise compute from coordinates
+                    if (response.data.assignedAmbulance.eta) {
+                        setEta(response.data.assignedAmbulance.eta)
+                    } else if (response.data.location) {
+                        setEta(calculateETA(ambLoc, response.data.location))
+                    }
                 }
 
                 setError(null)
@@ -61,11 +94,15 @@ export default function TrackAmbulance() {
         const cleanup = trackAmbulance(requestId, (data: any) => {
             console.log('Ambulance location update:', data)
             setAmbulanceLocation(data.location)
-            setEta(data.eta)
+            if (data.eta) {
+                setEta(data.eta)
+            } else if (data.location && emergency?.location) {
+                setEta(calculateETA(data.location, emergency.location))
+            }
         })
 
         return cleanup
-    }, [requestId])
+    }, [requestId, emergency])
 
     // Share tracking link
     const handleShare = async () => {
@@ -155,9 +192,9 @@ export default function TrackAmbulance() {
                             </div>
                         </div>
 
-                        {eta !== null && emergency.status !== 'arrived' && (
+                        {emergency.status !== 'arrived' && emergency.status !== 'completed' && (
                             <div className="text-right">
-                                <div className="text-3xl font-bold text-blue-900">{eta} min</div>
+                                <div className="text-3xl font-bold text-blue-900">{eta !== null ? `${eta} min` : 'Calculating...'}</div>
                                 <p className="text-sm text-blue-700">Estimated Arrival</p>
                             </div>
                         )}
@@ -321,7 +358,7 @@ export default function TrackAmbulance() {
                                         <div className="w-2 h-2 bg-gray-300 rounded-full mt-2 animate-pulse" />
                                         <div>
                                             <p className="font-semibold text-sm text-muted-foreground">En Route...</p>
-                                            <p className="text-xs text-muted-foreground">ETA: {eta} minutes</p>
+                                            <p className="text-xs text-muted-foreground">ETA: {eta !== null ? `${eta} minutes` : 'Calculating...'}</p>
                                         </div>
                                     </div>
                                 )}

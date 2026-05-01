@@ -88,7 +88,26 @@ const createEmergencyRequest = async (req, res) => {
 
         // Update ambulance status if one was found (use findByIdAndUpdate to bypass pre-save hook)
         if (nearestAmbulance) {
+            // Compute ETA using Haversine distance
+            let computedEta = null;
+            if (nearestAmbulance.currentLocation && nearestAmbulance.currentLocation.coordinates) {
+                const [aLng, aLat] = nearestAmbulance.currentLocation.coordinates;
+                const [pLng, pLat] = geoLocation.coordinates;
+                const R = 6371;
+                const toRad = (d) => (d * Math.PI) / 180;
+                const dLat = toRad(pLat - aLat);
+                const dLng = toRad(pLng - aLng);
+                const a = Math.sin(dLat / 2) ** 2 +
+                    Math.cos(toRad(aLat)) * Math.cos(toRad(pLat)) *
+                    Math.sin(dLng / 2) ** 2;
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                const straightDist = R * c;
+                const roadDist = straightDist * 1.4;
+                computedEta = Math.max(1, Math.round((roadDist / 40) * 60));
+            }
+
             const ambUpdate = { status: 'busy', assignedTo: emergencyRequest._id };
+            if (computedEta) ambUpdate.eta = computedEta;
             if (nearestHospital && nearestHospital.location && nearestHospital.location.coordinates) {
                 ambUpdate.destination = {
                     type: 'Point',
