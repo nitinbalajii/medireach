@@ -1,6 +1,8 @@
 "use client"
 
-import { useMemo } from "react"
+import { useEffect, useRef } from "react"
+import maplibregl from "maplibre-gl"
+import "maplibre-gl/dist/maplibre-gl.css"
 
 interface AmbulanceLiveTrackerProps {
     ambulanceLocation: { lat: number; lng: number }
@@ -13,97 +15,230 @@ export default function AmbulanceLiveTracker({
     patientLocation,
     hospitalLocation,
 }: AmbulanceLiveTrackerProps) {
-    // Build Google Maps directions embed URL
-    const mapUrl = useMemo(() => {
-        const origin = `${ambulanceLocation.lat},${ambulanceLocation.lng}`
-        const destination = hospitalLocation
-            ? `${hospitalLocation.lat},${hospitalLocation.lng}`
-            : `${patientLocation.lat},${patientLocation.lng}`
+    const mapContainer = useRef<HTMLDivElement>(null)
+    const map = useRef<maplibregl.Map | null>(null)
 
-        // If hospital exists, route through patient as a waypoint
-        const waypoint = hospitalLocation
-            ? `${patientLocation.lat},${patientLocation.lng}`
-            : null
+    useEffect(() => {
+        if (!mapContainer.current || map.current) return
 
-        let url = `https://www.google.com/maps/embed?pb=!1m0`
+        // Use CARTO Voyager — closest free style to Google Maps
+        map.current = new maplibregl.Map({
+            container: mapContainer.current,
+            style: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
+            center: [
+                (ambulanceLocation.lng + patientLocation.lng) / 2,
+                (ambulanceLocation.lat + patientLocation.lat) / 2,
+            ],
+            zoom: 12,
+            attributionControl: false,
+        })
 
-        // Use directions URL format for proper route display
-        const dirUrl = new URL('https://www.google.com/maps/dir/')
-        const originStr = `${ambulanceLocation.lat},${ambulanceLocation.lng}`
-        const destStr = hospitalLocation
-            ? `${hospitalLocation.lat},${hospitalLocation.lng}`
-            : `${patientLocation.lat},${patientLocation.lng}`
+        map.current.addControl(new maplibregl.NavigationControl(), "top-right")
+        map.current.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right")
 
-        // Google Maps embed with directions
-        // Format: /maps/dir/origin/waypoint/destination
-        if (waypoint) {
-            return `https://www.google.com/maps/embed/v1/directions?key=&origin=${originStr}&destination=${destStr}&waypoints=${waypoint}&mode=driving`
+        const m = map.current
+
+        // ----- Custom marker helper -----
+        function createMarker(emoji: string, label: string, color: string, size: number): HTMLDivElement {
+            const container = document.createElement("div")
+            container.style.display = "flex"
+            container.style.flexDirection = "column"
+            container.style.alignItems = "center"
+            container.style.cursor = "pointer"
+
+            const icon = document.createElement("div")
+            icon.style.width = `${size}px`
+            icon.style.height = `${size}px`
+            icon.style.borderRadius = "50%"
+            icon.style.background = color
+            icon.style.display = "flex"
+            icon.style.alignItems = "center"
+            icon.style.justifyContent = "center"
+            icon.style.fontSize = `${size * 0.5}px`
+            icon.style.boxShadow = "0 2px 8px rgba(0,0,0,0.3)"
+            icon.style.border = "3px solid white"
+            icon.textContent = emoji
+
+            const tag = document.createElement("div")
+            tag.style.marginTop = "4px"
+            tag.style.padding = "2px 8px"
+            tag.style.borderRadius = "4px"
+            tag.style.background = "white"
+            tag.style.boxShadow = "0 1px 4px rgba(0,0,0,0.2)"
+            tag.style.fontSize = "11px"
+            tag.style.fontWeight = "600"
+            tag.style.color = "#1f2937"
+            tag.style.whiteSpace = "nowrap"
+            tag.textContent = label
+
+            container.appendChild(icon)
+            container.appendChild(tag)
+            return container
         }
 
-        // Fallback: use the classic embed format that works without API key
-        const embedUrl = `https://www.google.com/maps?saddr=${originStr}&daddr=${destStr}&dirflg=d&output=embed`
-        return embedUrl
-    }, [ambulanceLocation, patientLocation, hospitalLocation])
+        // ----- Add markers -----
+        const ambEl = createMarker("🚑", "Ambulance", "#dc2626", 44)
+        ambEl.style.animation = "ambPulse 2s infinite"
+        new maplibregl.Marker({ element: ambEl, anchor: "bottom" })
+            .setLngLat([ambulanceLocation.lng, ambulanceLocation.lat])
+            .addTo(m)
 
-    // Classic Google Maps URL for the directions (non-embed, for fallback)
-    const directionsUrl = useMemo(() => {
-        const origin = `${ambulanceLocation.lat},${ambulanceLocation.lng}`
-        const dest = hospitalLocation
-            ? `${hospitalLocation.lat},${hospitalLocation.lng}`
-            : `${patientLocation.lat},${patientLocation.lng}`
-        const waypoint = hospitalLocation
-            ? `${patientLocation.lat},${patientLocation.lng}`
-            : null
+        new maplibregl.Marker({
+            element: createMarker("📍", "You", "#2563eb", 40),
+            anchor: "bottom",
+        })
+            .setLngLat([patientLocation.lng, patientLocation.lat])
+            .addTo(m)
 
-        if (waypoint) {
-            return `https://www.google.com/maps/dir/${origin}/${waypoint}/${dest}`
+        if (hospitalLocation) {
+            new maplibregl.Marker({
+                element: createMarker("🏥", "Hospital", "#16a34a", 40),
+                anchor: "bottom",
+            })
+                .setLngLat([hospitalLocation.lng, hospitalLocation.lat])
+                .addTo(m)
         }
-        return `https://www.google.com/maps/dir/${origin}/${dest}`
+
+        // ----- Fit bounds -----
+        const bounds = new maplibregl.LngLatBounds()
+        bounds.extend([ambulanceLocation.lng, ambulanceLocation.lat])
+        bounds.extend([patientLocation.lng, patientLocation.lat])
+        if (hospitalLocation) {
+            bounds.extend([hospitalLocation.lng, hospitalLocation.lat])
+        }
+        m.fitBounds(bounds, { padding: 80 })
+
+        // ----- Fetch actual road route from OSRM (free) -----
+        m.on("load", async () => {
+            if (!map.current) return
+
+            // Build waypoints: ambulance → patient → hospital
+            const waypoints: [number, number][] = [
+                [ambulanceLocation.lng, ambulanceLocation.lat],
+                [patientLocation.lng, patientLocation.lat],
+            ]
+            if (hospitalLocation) {
+                waypoints.push([hospitalLocation.lng, hospitalLocation.lat])
+            }
+
+            const coordsStr = waypoints.map((w) => `${w[0]},${w[1]}`).join(";")
+            const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${coordsStr}?overview=full&geometries=geojson`
+
+            try {
+                const res = await fetch(osrmUrl)
+                const data = await res.json()
+
+                if (data.code === "Ok" && data.routes?.[0]) {
+                    const route = data.routes[0]
+
+                    // Add route shadow (thick, semi-transparent)
+                    map.current!.addSource("route-shadow", {
+                        type: "geojson",
+                        data: {
+                            type: "Feature",
+                            properties: {},
+                            geometry: route.geometry,
+                        },
+                    })
+                    map.current!.addLayer({
+                        id: "route-shadow",
+                        type: "line",
+                        source: "route-shadow",
+                        layout: { "line-join": "round", "line-cap": "round" },
+                        paint: {
+                            "line-color": "#1d4ed8",
+                            "line-width": 10,
+                            "line-opacity": 0.25,
+                        },
+                    })
+
+                    // Add main route line (thick blue, like Google Maps)
+                    map.current!.addSource("route", {
+                        type: "geojson",
+                        data: {
+                            type: "Feature",
+                            properties: {},
+                            geometry: route.geometry,
+                        },
+                    })
+                    map.current!.addLayer({
+                        id: "route-line",
+                        type: "line",
+                        source: "route",
+                        layout: { "line-join": "round", "line-cap": "round" },
+                        paint: {
+                            "line-color": "#4285F4",
+                            "line-width": 5,
+                        },
+                    })
+
+                    // Add route border for depth
+                    map.current!.addLayer({
+                        id: "route-border",
+                        type: "line",
+                        source: "route",
+                        layout: { "line-join": "round", "line-cap": "round" },
+                        paint: {
+                            "line-color": "#1a73e8",
+                            "line-width": 7,
+                            "line-opacity": 0.4,
+                        },
+                    }, "route-line")
+
+                    // Fit to the route geometry bounds
+                    const coords = route.geometry.coordinates as [number, number][]
+                    const routeBounds = new maplibregl.LngLatBounds()
+                    coords.forEach((c) => routeBounds.extend(c))
+                    map.current!.fitBounds(routeBounds, { padding: 80 })
+                }
+            } catch (err) {
+                console.error("OSRM routing failed, drawing straight line fallback:", err)
+                // Fallback: straight line
+                const fallbackCoords: [number, number][] = [
+                    [ambulanceLocation.lng, ambulanceLocation.lat],
+                    [patientLocation.lng, patientLocation.lat],
+                ]
+                if (hospitalLocation) {
+                    fallbackCoords.push([hospitalLocation.lng, hospitalLocation.lat])
+                }
+
+                map.current!.addSource("route", {
+                    type: "geojson",
+                    data: {
+                        type: "Feature",
+                        properties: {},
+                        geometry: { type: "LineString", coordinates: fallbackCoords },
+                    },
+                })
+                map.current!.addLayer({
+                    id: "route-line",
+                    type: "line",
+                    source: "route",
+                    layout: { "line-join": "round", "line-cap": "round" },
+                    paint: {
+                        "line-color": "#4285F4",
+                        "line-width": 5,
+                        "line-dasharray": [2, 2],
+                    },
+                })
+            }
+        })
+
+        return () => {
+            map.current?.remove()
+            map.current = null
+        }
     }, [ambulanceLocation, patientLocation, hospitalLocation])
 
     return (
-        <div className="relative w-full">
-            <iframe
-                src={mapUrl}
-                className="w-full h-96 rounded-lg border-0"
-                allowFullScreen
-                loading="eager"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Ambulance Route Map"
-            />
-
-            {/* Legend overlay */}
-            <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg px-3 py-2 text-xs space-y-1">
-                <div className="flex items-center gap-2">
-                    <span className="text-lg">🚑</span>
-                    <span className="font-medium">Ambulance Location</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <span className="text-lg">📍</span>
-                    <span className="font-medium">Your Location</span>
-                </div>
-                {hospitalLocation && (
-                    <div className="flex items-center gap-2">
-                        <span className="text-lg">🏥</span>
-                        <span className="font-medium">Hospital</span>
-                    </div>
-                )}
-            </div>
-
-            {/* Open in Google Maps button */}
-            <a
-                href={directionsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute top-3 right-3 bg-white hover:bg-gray-50 text-gray-700 text-xs font-medium px-3 py-1.5 rounded-md shadow-md flex items-center gap-1.5 transition-colors"
-            >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
-                </svg>
-                Open in Google Maps
-            </a>
-        </div>
+        <>
+            <div ref={mapContainer} className="w-full h-96 rounded-lg" />
+            <style jsx global>{`
+                @keyframes ambPulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.08); }
+                }
+            `}</style>
+        </>
     )
 }
