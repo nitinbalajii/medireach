@@ -50,6 +50,7 @@ app.use('/api/tracking', require('./routes/tracking'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/donors', require('./routes/donors'));
 app.use('/api/pharmacies', require('./routes/pharmacies'));
+app.use('/api/chat', require('./routes/chat'));
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -68,6 +69,12 @@ io.on('connection', (socket) => {
     socket.on('track_ambulance', (requestId) => {
         socket.join(`emergency_${requestId}`);
         console.log(`📍 Tracking ambulance for request: ${requestId}`);
+    });
+
+    // Join dispatch room (for AI chatbot sessions)
+    socket.on('join_dispatch_room', (sessionId) => {
+        socket.join(sessionId);
+        console.log(`🤖 Joined dispatch room: ${sessionId}`);
     });
 
     // Ambulance location update
