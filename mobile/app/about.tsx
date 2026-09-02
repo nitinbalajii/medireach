@@ -74,7 +74,7 @@ export default function AboutScreen() {
                 <View className="bg-red-50 p-4 rounded-xl border border-red-100 mb-10 flex-row gap-3">
                     <ShieldAlert size={24} color="#dc2626" />
                     <View className="flex-1">
-                        <Text className="font-bold text-red-900 text-xs mb-1">Disclaimer</p>
+                        <Text className="font-bold text-red-900 text-xs mb-1">Disclaimer</Text>
                         <Text className="text-[10px] text-red-700 leading-relaxed">
                             MediReach assists users in locating emergency services but does not replace official emergency systems. In life-threatening situations, contact official emergency services directly.
                         </Text>

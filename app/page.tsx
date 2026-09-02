@@ -47,7 +47,12 @@ export default function Home() {
                 availability and emergency support when you need it most.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" asChild>
+                <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white shadow-lg animate-pulse" asChild>
+                  <a href="/ai-dispatch" >
+                    🚨 AI Emergency Dispatch
+                  </a>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
                   <Link href="/find-hospital">Find Nearby Hospital</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
@@ -172,6 +177,20 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-16">Our Services</h2>
           <div className="grid md:grid-cols-3 gap-8">
+            <Card className="p-8 hover:shadow-lg transition border-red-100 bg-red-50/30 relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">NEW</div>
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                <AlertCircle className="w-6 h-6 text-red-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Emergency Dispatch</h3>
+              <p className="text-muted-foreground mb-4">
+                Autonomous voice/text AI that triages your emergency, provides live first-aid, and auto-dispatches an ambulance.
+              </p>
+              <a href="/ai-dispatch"  className="text-red-600 font-semibold hover:underline flex items-center text-sm">
+                Try AI Dispatch <span className="ml-1">→</span>
+              </a>
+            </Card>
+
             <Card className="p-8 hover:shadow-lg transition">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                 <Heart className="w-6 h-6 text-primary" />

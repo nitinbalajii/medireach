@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { SOSTrigger } from "@/components/sos-trigger"
+import FloatingChatbot from "@/components/FloatingChatbot"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -11,6 +12,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "MediReach - Emergency Health Resource Finder",
   description: "Connect with hospitals, ambulances, and blood donors in real-time",
+  manifest: "/manifest.json",
   icons: {
     icon: "/icon.png",
     apple: "/icon.png",
@@ -27,6 +29,7 @@ export default function RootLayout({
       <body className={`font-sans antialiased`} suppressHydrationWarning>
         {children}
         <SOSTrigger />
+        <FloatingChatbot />
         <Analytics />
       </body>
     </html>

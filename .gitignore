@@ -50,3 +50,28 @@ next-env.d.ts
 
 # OS
 Thumbs.db
+
+# Temp / test scripts
+stress_test.js
+scratch/
+fix_report.py
+gen_report_*.py
+report_text_dump.txt
+stitch_find_hospitals_in_delhi/
+
+# Personal documents (reports, resumes, PDFs)
+*.docx
+*.pdf
+Nitin_Balajee_Resume.html
+
+# PWA generated service worker (auto-generated on build)
+public/sw.js
+public/workbox-*.js
+public/sw.js.map
+public/workbox-*.js.map
+
+# Mobile node_modules
+mobile/node_modules/
+
+# GATE Notes (separate from the web project)
+GATE_Notes/

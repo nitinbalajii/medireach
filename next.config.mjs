@@ -1,3 +1,12 @@
+import withPWAInit from 'next-pwa';
+
+const withPWA = withPWAInit({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
@@ -6,11 +15,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Turbopack configuration (Next.js 16+)
-  turbopack: {
-    // Empty config to silence the warning
-    // Turbopack is already optimized by default
-  },
-}
+  turbopack: {},
+};
 
-export default nextConfig
+export default withPWA(nextConfig);

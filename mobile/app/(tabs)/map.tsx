@@ -5,6 +5,7 @@ import * as Location from 'expo-location';
 import { hospitalAPI, ambulanceAPI } from '@/lib/api';
 import { Building2, Ambulance, Navigation, Search, Crosshair, Star } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { OSM_RASTER_STYLE } from '../../constants/MapStyles';
 
 // MapLibre is key-less when using OpenFreeMap tiles
 MapLibreGL.setAccessToken(null);
@@ -17,7 +18,7 @@ export default function MapScreen() {
     const [filter, setFilter] = useState<'all' | 'hospitals' | 'ambulances'>('all');
     const [selectedHospital, setSelectedHospital] = useState<any>(null);
     const [searchQuery, setSearchQuery] = useState('');
-    const cameraRef = useRef<MapLibreGL.Camera>(null);
+    const cameraRef = useRef<any>(null);
 
     useEffect(() => {
         if (searchQuery.length >= 3) {
@@ -100,11 +101,18 @@ export default function MapScreen() {
         <View className="flex-1 bg-slate-200">
             <MapLibreGL.MapView
                 style={styles.map}
-                styleURL="https://tiles.openfreemap.org/styles/bright"
+                styleURL="https://demotiles.maplibre.org/style.json"
                 onPress={() => setSelectedHospital(null)}
                 logoEnabled={false}
                 attributionEnabled={false}
             >
+                <MapLibreGL.RasterSource
+                    id="osm-tiles"
+                    tileUrlTemplates={["https://tile.openstreetmap.org/{z}/{x}/{y}.png"]}
+                    tileSize={256}
+                >
+                    <MapLibreGL.RasterLayer id="osm-layer" sourceID="osm-tiles" />
+                </MapLibreGL.RasterSource>
                 <MapLibreGL.Camera
                     ref={cameraRef}
                     zoomLevel={12}

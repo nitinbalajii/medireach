@@ -29,7 +29,28 @@ const getAllHospitals = async (req, res) => {
             query.specialisations = { $in: [specialty] };
         }
 
-        const hospitals = await Hospital.find(query).sort({ name: 1 });
+        let hospitals = [];
+        try {
+            hospitals = await Hospital.find(query).sort({ name: 1 });
+        } catch (dbError) {
+            console.warn('⚠️ MongoDB query failed in getAllHospitals, using fallback data:', dbError.message);
+            const fallbackData = JSON.parse(fs.readFileSync(fallbackDataPath, 'utf8'));
+            hospitals = fallbackData.map(h => ({
+                _id: h.id,
+                name: h.name,
+                address: h.address || h.name,
+                area: 'Delhi',
+                beds: h.availableBeds || h.totalBeds || 100,
+                oxygen: 50,
+                emergencyWardOpen: true,
+                location: { coordinates: [h.longitude, h.latitude] }
+            }));
+            
+            // Apply basic filters manually if needed
+            if (area && area !== 'All Delhi') {
+                hospitals = hospitals.filter(h => h.area === area);
+            }
+        }
 
         res.json({
             success: true,
@@ -46,6 +67,10 @@ const getAllHospitals = async (req, res) => {
     }
 };
 
+const fs = require('fs');
+const path = require('path');
+const fallbackDataPath = path.join(__dirname, '../hospitals_fallback.json');
+
 // @desc    Get nearest hospitals to a location
 // @route   GET /api/hospitals/nearest
 // @access  Public
@@ -60,32 +85,63 @@ const getNearestHospitals = async (req, res) => {
             });
         }
 
-        const hospitals = await Hospital.find({
-            location: {
-                $near: {
-                    $geometry: {
-                        type: 'Point',
-                        coordinates: [parseFloat(lng), parseFloat(lat)]
-                    },
-                    $maxDistance: parseInt(maxDistance) // in meters
+        let hospitalsWithDistance = [];
+
+        try {
+            const hospitals = await Hospital.find({
+                location: {
+                    $near: {
+                        $geometry: {
+                            type: 'Point',
+                            coordinates: [parseFloat(lng), parseFloat(lat)]
+                        },
+                        $maxDistance: parseInt(maxDistance) // in meters
+                    }
                 }
-            }
-        }).limit(parseInt(limit));
+            }).limit(parseInt(limit));
 
-        // Calculate distance for each hospital
-        const hospitalsWithDistance = hospitals.map(hospital => {
-            const distance = calculateDistance(
-                parseFloat(lat),
-                parseFloat(lng),
-                hospital.location.coordinates[1],
-                hospital.location.coordinates[0]
-            );
+            // Calculate distance for each hospital
+            hospitalsWithDistance = hospitals.map(hospital => {
+                const distance = calculateDistance(
+                    parseFloat(lat),
+                    parseFloat(lng),
+                    hospital.location.coordinates[1],
+                    hospital.location.coordinates[0]
+                );
 
-            return {
-                ...hospital.toObject(),
-                distance: Math.round(distance * 10) / 10 // Round to 1 decimal
-            };
-        });
+                return {
+                    ...hospital.toObject(),
+                    distance: Math.round(distance * 10) / 10 // Round to 1 decimal
+                };
+            });
+        } catch (dbError) {
+            console.warn('⚠️ MongoDB query failed, using fallback data:', dbError.message);
+            // Fallback to JSON file
+            const fallbackData = JSON.parse(fs.readFileSync(fallbackDataPath, 'utf8'));
+            
+            const parsedLat = parseFloat(lat);
+            const parsedLng = parseFloat(lng);
+            const maxDistKm = parseInt(maxDistance) / 1000;
+
+            const mappedHospitals = fallbackData.map(h => {
+                const distance = calculateDistance(parsedLat, parsedLng, h.latitude, h.longitude);
+                return {
+                    _id: h.id,
+                    name: h.name,
+                    address: h.address || h.name,
+                    area: 'Delhi',
+                    beds: h.availableBeds || h.totalBeds || 100,
+                    oxygen: 50,
+                    distance: Math.round(distance * 10) / 10,
+                    location: { coordinates: [h.longitude, h.latitude] }
+                };
+            });
+
+            hospitalsWithDistance = mappedHospitals
+                .filter(h => h.distance <= maxDistKm)
+                .sort((a, b) => a.distance - b.distance)
+                .slice(0, parseInt(limit));
+        }
 
         res.json({
             success: true,

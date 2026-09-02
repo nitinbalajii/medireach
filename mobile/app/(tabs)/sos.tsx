@@ -7,6 +7,7 @@ import { io } from 'socket.io-client';
 import * as Location from 'expo-location';
 import { Phone, Ambulance, MapPin, Clock } from 'lucide-react-native';
 import MapLibreGL from '@maplibre/maplibre-react-native';
+import { OSM_RASTER_STYLE } from '../../constants/MapStyles';
 
 const SOCKET_URL = 'http://192.168.0.100:5000';
 MapLibreGL.setAccessToken(null);
@@ -18,7 +19,7 @@ export default function SOSScreen() {
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [loading, setLoading] = useState(false);
     const [ambulanceLoc, setAmbulanceLoc] = useState<any>(null);
-    const cameraRef = useRef<MapLibreGL.Camera>(null);
+    const cameraRef = useRef<any>(null);
 
     useEffect(() => {
         (async () => {
@@ -106,10 +107,17 @@ export default function SOSScreen() {
             <View className="flex-1 bg-white">
                 <MapLibreGL.MapView
                     style={{ flex: 1 }}
-                    styleURL="https://tiles.openfreemap.org/styles/bright"
+                    styleURL="https://demotiles.maplibre.org/style.json"
                     logoEnabled={false}
                     attributionEnabled={false}
                 >
+                    <MapLibreGL.RasterSource
+                        id="osm-tiles"
+                        tileUrlTemplates={["https://tile.openstreetmap.org/{z}/{x}/{y}.png"]}
+                        tileSize={256}
+                    >
+                        <MapLibreGL.RasterLayer id="osm-layer" sourceID="osm-tiles" />
+                    </MapLibreGL.RasterSource>
                     <MapLibreGL.Camera
                         ref={cameraRef}
                         zoomLevel={14}
