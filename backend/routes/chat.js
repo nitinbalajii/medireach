@@ -33,7 +33,9 @@ router.post('/', async (req, res) => {
   } catch (error) {
     console.error('[Chat Route] Error:', error);
     res.status(500).json({
-      error: 'Failed to process message. Please try again.',
+      error: 'Failed to process message.',
+      details: error.message,
+      stack: error.stack
     });
   }
 });
