@@ -26,9 +26,12 @@ async function processMessage(sessionId, userMessage, io) {
   const fallbackModels = ["gemini-1.5-flash", "gemini-1.0-pro"];
   let modelIndex = -1;
 
+  let functionCalls = [];
+  let aiText = "";
+  const toolCallsLog = [];
+
   while (true) {
     try {
-      // Create Gemini chat with history
       chat = ai.chats.create({
         model: currentModel,
         config: {
@@ -38,8 +41,19 @@ async function processMessage(sessionId, userMessage, io) {
         history: history,
       });
 
-      // Send message and stream response
       responseStream = await chat.sendMessageStream({ message: userMessage });
+      
+      // Reset in case this is a retry
+      functionCalls = [];
+      aiText = "";
+
+      for await (const chunk of responseStream) {
+        if (chunk.functionCalls) functionCalls.push(...chunk.functionCalls);
+        if (chunk.text) {
+          aiText += chunk.text;
+          if (io) io.emit(`chat:stream:${sessionId}`, chunk.text);
+        }
+      }
       break; // Success!
     } catch (error) {
       if ((error.status === 503 || error.status === 429 || error.status === 404) && modelIndex < fallbackModels.length - 1) {
@@ -47,20 +61,8 @@ async function processMessage(sessionId, userMessage, io) {
         currentModel = fallbackModels[modelIndex];
         console.warn(`[AI Service] Model failed, falling back to ${currentModel}...`);
       } else {
-        throw error; // No more fallbacks, throw it up
+        throw error;
       }
-    }
-  }
-  const toolCallsLog = [];
-
-  let functionCalls = [];
-  let aiText = "";
-
-  for await (const chunk of responseStream) {
-    if (chunk.functionCalls) functionCalls.push(...chunk.functionCalls);
-    if (chunk.text) {
-      aiText += chunk.text;
-      if (io) io.emit(`chat:stream:${sessionId}`, chunk.text);
     }
   }
 
