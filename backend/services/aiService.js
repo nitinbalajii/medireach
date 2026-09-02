@@ -20,18 +20,37 @@ async function processMessage(sessionId, userMessage, io) {
   }
   const history = sessions.get(sessionId);
 
-  // Create Gemini chat with history
-  const chat = ai.chats.create({
-    model: geminiModel,
-    config: {
-      systemInstruction: SYSTEM_PROMPT,
-      tools: [{ functionDeclarations: toolDeclarations }],
-    },
-    history: history,
-  });
+  let chat;
+  let responseStream;
+  let currentModel = geminiModel;
+  const fallbackModels = ["gemini-1.5-flash", "gemini-1.0-pro"];
+  let modelIndex = -1;
 
-  // Send message and stream response
-  let responseStream = await chat.sendMessageStream({ message: userMessage });
+  while (true) {
+    try {
+      // Create Gemini chat with history
+      chat = ai.chats.create({
+        model: currentModel,
+        config: {
+          systemInstruction: SYSTEM_PROMPT,
+          tools: [{ functionDeclarations: toolDeclarations }],
+        },
+        history: history,
+      });
+
+      // Send message and stream response
+      responseStream = await chat.sendMessageStream({ message: userMessage });
+      break; // Success!
+    } catch (error) {
+      if ((error.status === 503 || error.status === 429 || error.status === 404) && modelIndex < fallbackModels.length - 1) {
+        modelIndex++;
+        currentModel = fallbackModels[modelIndex];
+        console.warn(`[AI Service] Model failed, falling back to ${currentModel}...`);
+      } else {
+        throw error; // No more fallbacks, throw it up
+      }
+    }
+  }
   const toolCallsLog = [];
 
   let functionCalls = [];
