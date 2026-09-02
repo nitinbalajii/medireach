@@ -12,7 +12,7 @@ const LiveMap = dynamic(() => import('@/components/LiveMap'), {
   loading: () => <div className="h-48 bg-gray-200 animate-pulse flex items-center justify-center">Loading Map...</div>
 });
 
-const API_URL = 'http://localhost:5005';
+const API_URL = process.env.NEXT_PUBLIC_DISPATCH_URL || 'http://localhost:5005';
 
 export default function FloatingChatbot() {
   const [isOpen, setIsOpen] = useState(false);
