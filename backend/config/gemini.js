@@ -115,6 +115,6 @@ const toolDeclarations = [
   },
 ];
 
-const geminiModel = "gemini-2.0-flash";
+const geminiModel = "gemini-3.6-flash";
 
 module.exports = { ai, SYSTEM_PROMPT, toolDeclarations, geminiModel };
