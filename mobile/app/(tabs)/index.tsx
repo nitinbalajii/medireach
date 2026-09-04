@@ -138,6 +138,21 @@ export default function HomeScreen() {
           <Text className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">Quick Actions</Text>
 
           <View className="flex-col gap-3">
+            {/* AI Dispatch Card */}
+            <TouchableOpacity
+              className="flex-row items-center bg-red-600 border border-red-700 p-4 rounded-xl active:bg-red-700"
+              onPress={() => router.push('/chatbot')}
+            >
+              <View className="bg-red-500 p-3 rounded-lg mr-4 border border-red-400">
+                <Siren size={24} color="white" />
+              </View>
+              <View className="flex-1">
+                <Text className="font-bold text-white text-base">AI Emergency Dispatch</Text>
+                <Text className="text-red-100 text-sm mt-0.5">Start triage & call ambulance</Text>
+              </View>
+              <ChevronRight size={20} color="#fca5a5" />
+            </TouchableOpacity>
+
             {/* SOS Card */}
             <TouchableOpacity
               className="flex-row items-center bg-red-50 border border-red-100 p-4 rounded-xl active:bg-red-100"
