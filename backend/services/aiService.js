@@ -23,14 +23,16 @@ async function processMessage(sessionId, userMessage, io) {
   let chat;
   let responseStream;
   let currentModel = geminiModel;
-  const fallbackModels = ["gemini-1.5-flash", "gemini-1.0-pro"];
+  const fallbackModels = ["gemini-1.5-flash", "gemini-1.0-pro", "gemini-3.6-flash"];
   let modelIndex = -1;
+  let retryCount = 0;
+  const maxRetries = 5;
 
   let functionCalls = [];
   let aiText = "";
   const toolCallsLog = [];
 
-  while (true) {
+  while (retryCount < maxRetries) {
     try {
       chat = ai.chats.create({
         model: currentModel,
@@ -56,13 +58,25 @@ async function processMessage(sessionId, userMessage, io) {
       }
       break; // Success!
     } catch (error) {
-      if ((error.status === 503 || error.status === 429 || error.status === 404) && modelIndex < fallbackModels.length - 1) {
+      retryCount++;
+      console.warn(`[AI Service] Attempt ${retryCount} failed with model ${currentModel}: ${error.message}`);
+      
+      if (modelIndex < fallbackModels.length - 1) {
         modelIndex++;
         currentModel = fallbackModels[modelIndex];
-        console.warn(`[AI Service] Model failed, falling back to ${currentModel}...`);
       } else {
+        // Reset to default model and just wait a bit if we've cycled through all
+        currentModel = geminiModel;
+        modelIndex = -1;
+      }
+      
+      if (retryCount >= maxRetries) {
+        console.error(`[AI Service] Exhausted all retries.`);
         throw error;
       }
+      
+      // Wait for 1 second before retrying
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
   }
 
@@ -106,13 +120,25 @@ async function processMessage(sessionId, userMessage, io) {
     }
 
     functionCalls = [];
-    responseStream = await chat.sendMessageStream({ message: functionResponsesParts });
+    
+    let funcRetryCount = 0;
+    while (funcRetryCount < maxRetries) {
+      try {
+        responseStream = await chat.sendMessageStream({ message: functionResponsesParts });
 
-    for await (const chunk of responseStream) {
-      if (chunk.functionCalls) functionCalls.push(...chunk.functionCalls);
-      if (chunk.text) {
-        aiText += chunk.text;
-        if (io) io.emit(`chat:stream:${sessionId}`, chunk.text);
+        for await (const chunk of responseStream) {
+          if (chunk.functionCalls) functionCalls.push(...chunk.functionCalls);
+          if (chunk.text) {
+            aiText += chunk.text;
+            if (io) io.emit(`chat:stream:${sessionId}`, chunk.text);
+          }
+        }
+        break; // Success
+      } catch (error) {
+        funcRetryCount++;
+        console.warn(`[AI Service] Function response attempt ${funcRetryCount} failed: ${error.message}`);
+        if (funcRetryCount >= maxRetries) throw error;
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
   }
