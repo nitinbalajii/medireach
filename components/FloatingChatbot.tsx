@@ -12,7 +12,8 @@ const LiveMap = dynamic(() => import('@/components/LiveMap'), {
   loading: () => <div className="h-48 bg-gray-200 animate-pulse flex items-center justify-center">Loading Map...</div>
 });
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5005';
+let rawApiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://medireach-idb2.onrender.com';
+const API_URL = rawApiUrl.replace(/\/$/, '');
 
 export default function FloatingChatbot() {
   const [isOpen, setIsOpen] = useState(false);
