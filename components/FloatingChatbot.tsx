@@ -187,7 +187,8 @@ export default function FloatingChatbot() {
       if (data.severity) setSeverity(data.severity);
       if (data.dispatchInfo) setDispatchInfo(data.dispatchInfo);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'model', content: '?? Connection lost. Please call emergency services directly.' }]);
+      console.error("Chatbot Fetch Error:", error);
+      setMessages(prev => [...prev, { role: 'model', content: `?? Connection Error: ${error.message}. API_URL: ${API_URL}` }]);
     } finally {
       setIsLoading(false);
     }
