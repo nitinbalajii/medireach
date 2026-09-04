@@ -13,7 +13,8 @@ const LiveMap = dynamic(() => import('@/components/LiveMap'), {
 });
 
 let rawApiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://medireach-idb2.onrender.com';
-const API_URL = rawApiUrl.replace(/\/$/, '');
+// Strip trailing slash and also strip trailing /api if the user accidentally included it
+const API_URL = rawApiUrl.replace(/\/$/, '').replace(/\/api$/, '');
 
 export default function FloatingChatbot() {
   const [isOpen, setIsOpen] = useState(false);
