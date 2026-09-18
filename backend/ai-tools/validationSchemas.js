@@ -19,7 +19,7 @@ const hospitalQuerySchema = z.object({
 
 const firstAidSchema = z.object({
   emergency_type: z.string().min(2),
-  patient_age_group: z.enum(["INFANT", "CHILD", "ADULT"]),
+  patient_age_group: z.enum(["INFANT", "CHILD", "ADULT"]).optional().default("ADULT"),
 });
 
 module.exports = { dispatchSchema, hospitalQuerySchema, firstAidSchema };

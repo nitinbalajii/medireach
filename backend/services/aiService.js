@@ -81,7 +81,9 @@ async function processMessage(sessionId, userMessage, io) {
   }
 
   // Function calling loop
-  while (functionCalls.length > 0) {
+  let toolLoopCounter = 0;
+  while (functionCalls.length > 0 && toolLoopCounter < 5) {
+    toolLoopCounter++;
     const functionResponsesParts = [];
 
     for (const functionCall of functionCalls) {
