@@ -51,6 +51,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/donors', require('./routes/donors'));
 app.use('/api/pharmacies', require('./routes/pharmacies'));
 app.use('/api/chat', require('./routes/chat'));
+app.use('/api/payment', require('./routes/payment'));
 
 // Health check route
 app.get('/api/health', (req, res) => {

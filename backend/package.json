@@ -21,6 +21,7 @@
     "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.0.0",
+    "razorpay": "^2.9.8",
     "socket.io": "^4.8.1",
     "zod": "^4.5.4"
   },
